@@ -83,6 +83,7 @@ class ModelManagerScreen extends ConsumerWidget {
               Text('min ram: ${bundle.minRamMb} mb'),
               Text('languages: ${bundle.languages.join(', ')}'),
               Text('offline: ${bundle.offlineCapable}'),
+              Text('integrity: sha256 pinned'),
               const SizedBox(height: 8),
               Row(
                 children: <Widget>[

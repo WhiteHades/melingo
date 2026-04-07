@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/model_bundle.dart';
 import '../models/model_health.dart';
 import '../models/model_install_state.dart';
 import '../models/model_manifest.dart';
 import '../network/model_manifest_client.dart';
 import '../state/settings_state.dart';
 import 'model_health_repository.dart';
+import 'model_artifact_repository.dart';
+import 'model_integrity.dart';
 import 'model_install_repository.dart';
 import 'model_manifest_repository.dart';
 
@@ -46,9 +49,11 @@ class ModelManagerController extends StateNotifier<ModelManagerState> {
     required ModelManifestRepository manifestRepository,
     required ModelInstallRepository installRepository,
     required ModelHealthRepository healthRepository,
+    required ModelArtifactRepository artifactRepository,
   })  : _manifestRepository = manifestRepository,
         _installRepository = installRepository,
         _healthRepository = healthRepository,
+        _artifactRepository = artifactRepository,
         super(const ModelManagerState()) {
     load();
   }
@@ -56,6 +61,7 @@ class ModelManagerController extends StateNotifier<ModelManagerState> {
   final ModelManifestRepository _manifestRepository;
   final ModelInstallRepository _installRepository;
   final ModelHealthRepository _healthRepository;
+  final ModelArtifactRepository _artifactRepository;
 
   Future<void> load() async {
     state = state.copyWith(isLoading: true, error: null);
@@ -98,6 +104,21 @@ class ModelManagerController extends StateNotifier<ModelManagerState> {
   }
 
   Future<void> markInstallReady(String bundleId) async {
+    final ModelBundle? bundle = _findBundle(bundleId);
+    if (bundle == null) {
+      state = state.copyWith(error: 'bundle metadata missing for $bundleId');
+      return;
+    }
+
+    final List<int> artifactBytes = await _artifactRepository.readOrDownload(bundleId);
+    final String actualHash = await ModelIntegrity.sha256Hex(artifactBytes);
+    if (actualHash != bundle.artifactSha256) {
+      state = state.copyWith(
+        error: 'integrity check failed for $bundleId',
+      );
+      return;
+    }
+
     final ModelInstallState install = ModelInstallState(
       bundleId: bundleId,
       status: 'ready',
@@ -115,6 +136,16 @@ class ModelManagerController extends StateNotifier<ModelManagerState> {
     );
     await _healthRepository.write(health);
     state = state.copyWith(installs: next, health: health);
+  }
+
+  ModelBundle? _findBundle(String bundleId) {
+    final List<ModelBundle> bundles = state.manifest?.bundles ?? const <ModelBundle>[];
+    for (final ModelBundle bundle in bundles) {
+      if (bundle.id == bundleId) {
+        return bundle;
+      }
+    }
+    return null;
   }
 }
 
@@ -142,6 +173,12 @@ final Provider<ModelHealthRepository> modelHealthRepositoryProvider =
   return ModelHealthRepository(store: store);
 });
 
+final Provider<ModelArtifactRepository> modelArtifactRepositoryProvider =
+    Provider<ModelArtifactRepository>((Ref ref) {
+  final SettingsValueStore store = ref.watch(settingsStoreProvider);
+  return ModelArtifactRepository(store: store);
+});
+
 final StateNotifierProvider<ModelManagerController, ModelManagerState>
     modelManagerControllerProvider =
     StateNotifierProvider<ModelManagerController, ModelManagerState>((Ref ref) {
@@ -149,5 +186,6 @@ final StateNotifierProvider<ModelManagerController, ModelManagerState>
     manifestRepository: ref.watch(modelManifestRepositoryProvider),
     installRepository: ref.watch(modelInstallRepositoryProvider),
     healthRepository: ref.watch(modelHealthRepositoryProvider),
+    artifactRepository: ref.watch(modelArtifactRepositoryProvider),
   );
 });
