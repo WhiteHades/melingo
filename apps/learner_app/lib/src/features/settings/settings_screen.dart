@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../l10n/fallback_strings.dart';
 import '../../state/settings_state.dart';
@@ -56,6 +57,14 @@ class SettingsScreen extends ConsumerWidget {
                   ? FallbackStrings.encryptionEnabled(context)
                   : FallbackStrings.encryptionDisabled(context),
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.memory_outlined),
+            title: const Text('model manager'),
+            subtitle: const Text('bundle setup and model health'),
+            onTap: () {
+              context.push('/models');
+            },
           ),
         ],
       ),

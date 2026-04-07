@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'features/home/home_screen.dart';
 import 'features/library/library_screen.dart';
+import 'features/models/model_manager_screen.dart';
 import 'features/practice/practice_screen.dart';
 import 'features/profile/profile_screen.dart';
 import 'features/settings/settings_screen.dart';
@@ -82,6 +83,12 @@ final GoRouter _router = GoRouter(
             path: AppTab.settings.path,
             builder: (BuildContext context, GoRouterState state) {
               return const SettingsScreen();
+            },
+          ),
+          GoRoute(
+            path: '/models',
+            builder: (BuildContext context, GoRouterState state) {
+              return const ModelManagerScreen();
             },
           ),
         ]),
