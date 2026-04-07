@@ -29,6 +29,10 @@ void main() {
     expect(manifest.bundles.length, 3);
     expect(manifest.bundles.first.id, 'lite');
     expect(manifest.bundles.first.offlineCapable, true);
+    expect(
+      manifest.bundles.first.artifactSha256,
+      '9e3fdf35883bcc2410a05188960b71240696d9c5424cdd79f93d904d8aec3272',
+    );
   });
 
   test('fetch manifest throws on non-200 status', () async {

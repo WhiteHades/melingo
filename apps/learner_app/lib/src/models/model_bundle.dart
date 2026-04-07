@@ -5,6 +5,7 @@ class ModelBundle {
     required this.minRamMb,
     required this.languages,
     required this.offlineCapable,
+    required this.artifactSha256,
   });
 
   final String id;
@@ -12,6 +13,7 @@ class ModelBundle {
   final int minRamMb;
   final List<String> languages;
   final bool offlineCapable;
+  final String artifactSha256;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -20,6 +22,7 @@ class ModelBundle {
       'minRamMb': minRamMb,
       'languages': languages,
       'offlineCapable': offlineCapable,
+      'artifactSha256': artifactSha256,
     };
   }
 
@@ -31,6 +34,7 @@ class ModelBundle {
       languages:
           (map['languages'] as List<dynamic>).map((dynamic e) => e as String).toList(growable: false),
       offlineCapable: map['offlineCapable'] as bool,
+      artifactSha256: map['artifactSha256'] as String,
     );
   }
 }
