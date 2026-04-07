@@ -1,0 +1,9 @@
+{
+  "appName": "Melingo",
+  "settingsTitle": "Settings",
+  "diagnosticsOptIn": "Diagnostics opt-in",
+  "storeRawAudio": "Store raw audio locally",
+  "encryptionStatus": "Encryption status",
+  "encryptionEnabled": "enabled for sensitive settings",
+  "encryptionDisabled": "disabled"
+}
