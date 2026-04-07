@@ -1,0 +1,3 @@
+/home/efaz/.volta/bin/npx lint-staged
+/home/efaz/.volta/bin/npm run typecheck
+/home/efaz/.volta/bin/npm run test
