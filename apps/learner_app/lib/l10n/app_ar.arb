@@ -1,0 +1,9 @@
+{
+  "appName": "Melingo",
+  "settingsTitle": "الاعدادات",
+  "diagnosticsOptIn": "تفعيل التشخيص",
+  "storeRawAudio": "حفظ الصوت الخام محليا",
+  "encryptionStatus": "حالة التشفير",
+  "encryptionEnabled": "مفعل للبيانات الحساسة",
+  "encryptionDisabled": "غير مفعل"
+}
