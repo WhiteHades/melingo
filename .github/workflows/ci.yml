@@ -1,0 +1,73 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install backend tooling
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r backend/api/requirements.txt pytest ruff
+          npm install --ignore-scripts
+
+      - name: Run backend checks
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+
+  flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Flutter pub get
+        working-directory: apps/learner_app
+        run: flutter pub get
+
+      - name: Run Flutter checks
+        working-directory: apps/learner_app
+        run: |
+          flutter analyze
+          flutter test
+          flutter build web
+
+  firebase-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate Firebase JSON files
+        run: |
+          python3 -m json.tool firebase.json > /dev/null
+          python3 -m json.tool firestore.indexes.json > /dev/null
+          python3 infra/scripts/validate_model_manifest.py apps/learner_app/web/model-manifest.json
