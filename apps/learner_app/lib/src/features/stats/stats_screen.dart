@@ -8,11 +8,29 @@ import '../../practice/practice_telemetry.dart';
 import '../../state/settings_state.dart';
 import 'stats_aggregator.dart';
 
-class StatsScreen extends ConsumerWidget {
+enum StatsWindow {
+  days7(7, '7d'),
+  days30(30, '30d'),
+  days90(90, '90d');
+
+  const StatsWindow(this.days, this.label);
+
+  final int days;
+  final String label;
+}
+
+class StatsScreen extends ConsumerStatefulWidget {
   const StatsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StatsScreen> createState() => _StatsScreenState();
+}
+
+class _StatsScreenState extends ConsumerState<StatsScreen> {
+  StatsWindow _window = StatsWindow.days30;
+
+  @override
+  Widget build(BuildContext context) {
     final SettingsValueStore store = ref.watch(settingsStoreProvider);
     final SecretMaterialStore secretMaterialStore =
         ref.watch(secretMaterialStoreProvider);
@@ -28,8 +46,27 @@ class StatsScreen extends ConsumerWidget {
       future: repository.readAll(),
       builder: (BuildContext context,
           AsyncSnapshot<List<PracticeTelemetryEvent>> snapshot) {
+        if (snapshot.hasError) {
+          return SafeArea(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: const <Widget>[
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text('Stats are temporarily unavailable.'),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
         final StatsSummary summary = snapshot.hasData
-            ? const StatsAggregator().summarize(snapshot.data!)
+            ? const StatsAggregator().summarize(
+                snapshot.data!,
+                windowDays: _window.days,
+              )
             : StatsSummary.empty;
 
         return SafeArea(
@@ -45,12 +82,34 @@ class StatsScreen extends ConsumerWidget {
                 '${FallbackStrings.activeLanguagePack(context)}: ${languagePack.displayName} (${languagePack.taxonomyVersion})',
               ),
               const SizedBox(height: 12),
+              SegmentedButton<StatsWindow>(
+                segments: StatsWindow.values
+                    .map(
+                      (StatsWindow window) => ButtonSegment<StatsWindow>(
+                        value: window,
+                        label: Text(window.label),
+                      ),
+                    )
+                    .toList(growable: false),
+                selected: <StatsWindow>{_window},
+                onSelectionChanged: (Set<StatsWindow> next) {
+                  setState(() {
+                    _window = next.first;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
                 children: <Widget>[
+                  _kpiCard(context, 'practice minutes',
+                      summary.practiceMinutes.toString()),
+                  _kpiCard(context, 'streak', '${summary.streakDays} days'),
                   _kpiCard(context, FallbackStrings.sessionsLabel(context),
                       summary.sessionCount.toString()),
+                  _kpiCard(context, 'avg session length',
+                      '${summary.avgSessionLengthMinutes} min'),
                   _kpiCard(context, FallbackStrings.avgAsrLatencyLabel(context),
                       '${summary.avgAsrLatencyMs} ms'),
                   _kpiCard(
@@ -69,6 +128,35 @@ class StatsScreen extends ConsumerWidget {
                   _kpiCard(context, FallbackStrings.interruptionsLabel(context),
                       summary.interruptionCount.toString()),
                 ],
+              ),
+              if (summary.sessionCount == 0) ...<Widget>[
+                const SizedBox(height: 16),
+                const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      'No practice activity has landed in this time window yet.',
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 16),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: <Widget>[
+                      _kpiCard(context, 'grammar tags',
+                          summary.grammarTagCount.toString()),
+                      _kpiCard(context, 'pronunciation tags',
+                          summary.pronunciationTagCount.toString()),
+                      _kpiCard(context, 'vocabulary tags',
+                          summary.vocabularyTagCount.toString()),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               Card(
@@ -94,11 +182,6 @@ class StatsScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                FallbackStrings.trendSummary(context),
-                style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
           ),
