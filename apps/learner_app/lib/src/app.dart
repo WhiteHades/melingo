@@ -6,6 +6,7 @@ import 'features/library/library_screen.dart';
 import 'features/models/model_manager_screen.dart';
 import 'features/practice/practice_screen.dart';
 import 'features/profile/profile_screen.dart';
+import 'features/review/review_screen.dart';
 import 'features/settings/settings_screen.dart';
 import 'features/stats/stats_screen.dart';
 import 'l10n/fallback_strings.dart';
@@ -68,6 +69,12 @@ final GoRouter _router = GoRouter(
             path: AppTab.practice.path,
             builder: (BuildContext context, GoRouterState state) {
               return const PracticeScreen();
+            },
+          ),
+          GoRoute(
+            path: '/review',
+            builder: (BuildContext context, GoRouterState state) {
+              return const ReviewScreen();
             },
           ),
         ]),

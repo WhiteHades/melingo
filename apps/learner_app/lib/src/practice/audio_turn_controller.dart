@@ -9,6 +9,7 @@ import '../native/ai_bridge_platform.dart';
 import '../onboarding/onboarding_controller.dart';
 import '../onboarding/onboarding_profile.dart';
 import '../onboarding/onboarding_repository.dart';
+import '../review/practice_review_repository.dart';
 import '../state/settings_state.dart';
 import 'practice_telemetry.dart';
 import 'tutor_turn_result.dart';
@@ -99,10 +100,12 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
     required PracticeTelemetryRepository telemetryRepository,
     required ModelHealthRepository modelHealthRepository,
     required OnboardingRepository onboardingRepository,
+    required PracticeReviewRepository reviewRepository,
   })  : _aiBridge = aiBridge,
         _telemetryRepository = telemetryRepository,
         _modelHealthRepository = modelHealthRepository,
         _onboardingRepository = onboardingRepository,
+        _reviewRepository = reviewRepository,
         super(AudioTurnState.initial) {
     _refreshOfflineReadiness();
   }
@@ -111,6 +114,7 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
   final PracticeTelemetryRepository _telemetryRepository;
   final ModelHealthRepository _modelHealthRepository;
   final OnboardingRepository _onboardingRepository;
+  final PracticeReviewRepository _reviewRepository;
 
   List<int>? _currentPcm;
   List<int> _lastTtsBytes = <int>[];
@@ -302,6 +306,19 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
       final int ttsLatencyMs = ttsStopwatch.elapsedMilliseconds;
       _lastTtsBytes = ttsBytes;
 
+      await _reviewRepository.append(
+        PracticeReviewTurn(
+          turnId: turnId,
+          occurredAtIso: DateTime.now().toUtc().toIso8601String(),
+          transcript: transcript,
+          correctedText: tutor.correctedText,
+          explanation: tutor.explanation,
+          nextPrompt: tutor.nextPrompt,
+          assistantResponseText: tutor.assistantResponseText,
+          mistakeTags: tutor.mistakeTags,
+        ),
+      );
+
       await _telemetryRepository.append(
         PracticeTelemetryEvent(
           type: 'tts_result',
@@ -400,6 +417,8 @@ final StateNotifierProvider<AudioTurnController, AudioTurnState>
       ref.watch(practiceTelemetryRepositoryProvider);
   final OnboardingRepository onboardingRepository =
       ref.watch(onboardingRepositoryProvider);
+  final PracticeReviewRepository reviewRepository =
+      ref.watch(practiceReviewRepositoryProvider);
   final SettingsValueStore store = ref.watch(settingsStoreProvider);
   final ModelHealthRepository health = ModelHealthRepository(store: store);
   return AudioTurnController(
@@ -407,5 +426,6 @@ final StateNotifierProvider<AudioTurnController, AudioTurnState>
     telemetryRepository: telemetry,
     modelHealthRepository: health,
     onboardingRepository: onboardingRepository,
+    reviewRepository: reviewRepository,
   );
 });
