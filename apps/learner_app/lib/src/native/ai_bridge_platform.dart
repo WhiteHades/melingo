@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 abstract class AiBridgePlatform {
   Future<void> initialize();
   Future<void> startRecording();
@@ -6,6 +8,7 @@ abstract class AiBridgePlatform {
   Future<String> runAsr({required List<int> pcm16leBytes});
   Future<String> runTutor({required String transcript});
   Future<List<int>> runTts({required String responseText});
+  Future<void> stopTts();
 }
 
 class UnimplementedAiBridgePlatform implements AiBridgePlatform {
@@ -43,11 +46,25 @@ class UnimplementedAiBridgePlatform implements AiBridgePlatform {
 
   @override
   Future<String> runTutor({required String transcript}) async {
-    return 'tutor_not_configured';
+    return jsonEncode(<String, dynamic>{
+      'correctedText': transcript,
+      'explanation':
+          'Nice attempt. Keep subject and verb agreement aligned in the sentence.',
+      'encouragement': 'Good effort.',
+      'nextPrompt': 'Can you say the same idea in past tense?',
+      'mistakeTags': <String>['grammar:agreement'],
+      'responseText': 'Good effort. Can you say the same idea in past tense?',
+    });
   }
 
   @override
   Future<List<int>> runTts({required String responseText}) async {
-    return <int>[];
+    if (responseText.isEmpty) {
+      return <int>[];
+    }
+    return responseText.codeUnits;
   }
+
+  @override
+  Future<void> stopTts() async {}
 }
