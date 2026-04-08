@@ -27,11 +27,17 @@ That changes what matters. You care less about endless lesson trees and more abo
 
 ## What It Does
 
-- Runs a speaking loop built from ASR, tutoring, and TTS.
+- Implements the speaking-loop UI and state machine around ASR, tutoring, and TTS contracts.
 - Keeps learner state local first, then syncs when cloud services are available.
 - Supports Arabic and German with direction-aware UI and language-pack routing.
 - Uses one Flutter codebase across phone, tablet, desktop, and web.
 - Treats privacy as a default, not a premium setting.
+
+## Current Repo Status
+
+- Backend checks, Flutter analysis/tests, web build, Linux build, and Android debug build pass on the current Linux machine.
+- The current repository uses a simulated AI bridge for ASR, tutor, and TTS during local runs and tests.
+- Real on-device model inference is not wired into this tree yet, so voice-loop UX can be exercised end to end, but the responses are still stubbed.
 
 ## Core Features
 
@@ -74,3 +80,4 @@ Melangua is being built as a multi-platform Flutter app with Firebase-backed clo
 - Product requirements: `docs/prd-melangua-offline-flutter-language-tutor.md`
 - Delivery plan: `plans/melangua-offline-flutter-language-tutor.md`
 - Development and setup: `docs/development.md`
+- Manual verification guide: `docs/manual-testing.md`

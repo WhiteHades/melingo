@@ -21,8 +21,13 @@ class FirebaseBootstrap {
   const FirebaseBootstrap._();
 
   static Future<void> initialize() async {
+    final FirebaseOptions? options = optionsForCurrentPlatform();
+    if (options == null) {
+      return;
+    }
+
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+      options: options,
     );
 
     if (useFirebaseEmulators) {
@@ -56,6 +61,16 @@ class FirebaseBootstrap {
     if (enableAnonymousFirebaseAuth &&
         FirebaseAuth.instance.currentUser == null) {
       await FirebaseAuth.instance.signInAnonymously();
+    }
+  }
+
+  static FirebaseOptions? optionsForCurrentPlatform() {
+    try {
+      return DefaultFirebaseOptions.currentPlatform;
+    } on UnsupportedError {
+      // Keep local desktop testing usable even when FlutterFire is not
+      // configured for that host platform yet.
+      return null;
     }
   }
 

@@ -18,11 +18,12 @@
 ### Flutter App
 
 - Adaptive shell across phone/tablet/desktop/web.
-- Speaking loop with ASR -> tutor -> TTS state machine.
+- Speaking-loop UX and state machine for ASR -> tutor -> TTS.
 - Replay and interruption support.
 - Session review timeline with category filters and replay from review.
 - Stats with 7/30/90-day windows, streak, session length, practice minutes, and tag rollups.
 - Arabic and German language packs with RTL support.
+- Current local/dev runtime still uses a simulated AI bridge rather than real on-device inference.
 
 ### Security And Local Persistence
 
@@ -63,6 +64,31 @@ Flutter app dependencies were upgraded to current resolvable majors, including:
 - `go_router` `17.2.0`
 
 Compatibility fixes were added so the app still compiles and tests pass.
+
+## Current Verification Snapshot
+
+Verified successfully on 2026-04-08:
+
+- `/home/efaz/.volta/bin/npm run lint`
+- `/home/efaz/.volta/bin/npm run typecheck`
+- `/home/efaz/.volta/bin/npm test`
+- `python3 infra/scripts/validate_model_manifest.py apps/learner_app/web/model-manifest.json`
+- `flutter pub get`
+- `flutter analyze`
+- `flutter test`
+- `flutter build web --no-wasm-dry-run`
+- `flutter build linux`
+- `flutter build apk --debug`
+
+Build outputs verified:
+
+- web: `apps/learner_app/build/web`
+- linux: `apps/learner_app/build/linux/x64/release/bundle/melangua`
+- android debug: `apps/learner_app/build/app/outputs/flutter-apk/app-debug.apk`
+
+Manual test guide:
+
+- `docs/manual-testing.md`
 
 ## Repo Docs To Read First
 
@@ -164,6 +190,7 @@ python3 infra/scripts/validate_model_manifest.py apps/learner_app/web/model-mani
 3. Configure real Firebase App Check enforcement.
 4. Add richer auth providers if anonymous-only auth is not enough for launch.
 5. If web wasm matters, replace or isolate `flutter_secure_storage_web`.
+6. Implement a real `AiBridgePlatform` so ASR, tutor, and TTS are backed by actual model runtimes instead of the current simulated bridge.
 
 ## Important Constraint
 

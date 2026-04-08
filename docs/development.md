@@ -21,6 +21,13 @@ flutter test
 flutter build web --no-wasm-dry-run
 ```
 
+Additional local verification commands:
+
+```bash
+flutter build linux
+flutter build apk --debug
+```
+
 ## Firebase Project
 
 Default Firebase project:
@@ -52,6 +59,17 @@ The current web target is treated as a JavaScript web build, not a wasm target. 
 flutter build web --no-wasm-dry-run
 ```
 
+If Chrome is not installed on your Linux machine, use `flutter run -d web-server` or serve `build/web` with a local HTTP server instead of `flutter run -d chrome`.
+
+## Manual Testing
+
+See `docs/manual-testing.md` for:
+
+- step-by-step Linux, web, backend, and Android run commands
+- a user-story smoke-test checklist
+- the exact verified outputs from this machine
+- current limitations around the simulated AI bridge
+
 ## Firebase Files In Repo
 
 - Root Firebase project config: `.firebaserc`, `firebase.json`
@@ -63,3 +81,9 @@ flutter build web --no-wasm-dry-run
 
 - Firebase handles project registration, app config, rules, hosting, and future auth/sync surfaces.
 - FastAPI remains available for thin custom APIs and operational endpoints while the Firebase-backed path is completed.
+
+## Current Runtime Truth
+
+- The current repository passes automated backend and Flutter verification.
+- The current ASR, tutor, and TTS path is still simulated in local development and tests.
+- Manual testing today validates product flow and integration scaffolding, not real on-device inference quality.
