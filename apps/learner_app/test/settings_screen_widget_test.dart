@@ -30,7 +30,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: <Override>[
+        overrides: [
           settingsRepositoryProvider.overrideWithValue(fakeRepository),
         ],
         child: const MaterialApp(

@@ -87,7 +87,7 @@ void main() {
     );
 
     final ProviderContainer container = ProviderContainer(
-      overrides: <Override>[
+      overrides: [
         settingsStoreProvider.overrideWithValue(store),
         secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(_FakeAiBridge()),
@@ -160,7 +160,7 @@ void main() {
       secretMaterialStore: secrets,
     );
     final ProviderContainer container = ProviderContainer(
-      overrides: <Override>[
+      overrides: [
         settingsStoreProvider.overrideWithValue(store),
         secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(fakeBridge),
@@ -201,7 +201,7 @@ void main() {
     );
 
     final ProviderContainer container = ProviderContainer(
-      overrides: <Override>[
+      overrides: [
         settingsStoreProvider.overrideWithValue(store),
         secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(fakeBridge),
@@ -247,7 +247,7 @@ void main() {
     );
 
     final ProviderContainer container = ProviderContainer(
-      overrides: <Override>[
+      overrides: [
         settingsStoreProvider.overrideWithValue(store),
         secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(fakeBridge),
@@ -281,7 +281,7 @@ void main() {
     final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
 
     final ProviderContainer container = ProviderContainer(
-      overrides: <Override>[
+      overrides: [
         settingsStoreProvider.overrideWithValue(store),
         secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(_FakeAiBridge()),
@@ -340,7 +340,7 @@ void main() {
     );
 
     final ProviderContainer container = ProviderContainer(
-      overrides: <Override>[
+      overrides: [
         settingsStoreProvider.overrideWithValue(store),
         secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(fakeBridge),

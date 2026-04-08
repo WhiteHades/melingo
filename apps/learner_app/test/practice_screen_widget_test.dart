@@ -11,7 +11,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: <Override>[
+        overrides: [
           settingsStoreProvider.overrideWithValue(store),
         ],
         child: const MaterialApp(

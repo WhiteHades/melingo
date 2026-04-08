@@ -24,7 +24,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: <Override>[
+        overrides: [
           settingsStoreProvider.overrideWithValue(store),
           secretMaterialStoreProvider.overrideWithValue(secrets),
           syncQueueRepositoryProvider.overrideWithValue(queue),
@@ -58,7 +58,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: <Override>[
+        overrides: [
           settingsStoreProvider.overrideWithValue(store),
           secretMaterialStoreProvider.overrideWithValue(secrets),
           syncQueueRepositoryProvider.overrideWithValue(queue),
