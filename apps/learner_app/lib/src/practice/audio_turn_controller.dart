@@ -6,9 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/language_packs.dart';
 import '../model_manager/model_health_repository.dart';
 import '../native/ai_bridge_platform.dart';
+import '../firebase/firebase_sync.dart';
 import '../onboarding/onboarding_controller.dart';
 import '../onboarding/onboarding_profile.dart';
 import '../onboarding/onboarding_repository.dart';
+import '../onboarding/sync_queue.dart';
 import '../review/practice_review_repository.dart';
 import '../state/settings_state.dart';
 import 'practice_telemetry.dart';
@@ -101,11 +103,15 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
     required ModelHealthRepository modelHealthRepository,
     required OnboardingRepository onboardingRepository,
     required PracticeReviewRepository reviewRepository,
+    required SyncQueueRepository syncQueueRepository,
+    required FirebaseSyncService syncService,
   })  : _aiBridge = aiBridge,
         _telemetryRepository = telemetryRepository,
         _modelHealthRepository = modelHealthRepository,
         _onboardingRepository = onboardingRepository,
         _reviewRepository = reviewRepository,
+        _syncQueueRepository = syncQueueRepository,
+        _syncService = syncService,
         super(AudioTurnState.initial) {
     _refreshOfflineReadiness();
   }
@@ -115,6 +121,8 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
   final ModelHealthRepository _modelHealthRepository;
   final OnboardingRepository _onboardingRepository;
   final PracticeReviewRepository _reviewRepository;
+  final SyncQueueRepository _syncQueueRepository;
+  final FirebaseSyncService _syncService;
 
   List<int>? _currentPcm;
   List<int> _lastTtsBytes = <int>[];
@@ -176,7 +184,7 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
     _ttsInterruptRequested = true;
     await _aiBridge.stopTts();
     final String turnId = state.turnId ?? _newTurnId();
-    await _telemetryRepository.append(
+    await _recordPracticeEvent(
       PracticeTelemetryEvent(
         type: 'tts_interrupted',
         turnId: turnId,
@@ -200,7 +208,7 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
     }
 
     final String turnId = state.turnId ?? _newTurnId();
-    await _telemetryRepository.append(
+    await _recordPracticeEvent(
       PracticeTelemetryEvent(
         type: 'tts_replay',
         turnId: turnId,
@@ -243,7 +251,7 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
       final int latencyMs = stopwatch.elapsedMilliseconds;
       final double confidence = _estimateConfidence(transcript);
 
-      await _telemetryRepository.append(
+      await _recordPracticeEvent(
         PracticeTelemetryEvent(
           type: 'asr_result',
           turnId: turnId,
@@ -278,7 +286,7 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
         languagePack: languagePack,
       );
 
-      await _telemetryRepository.append(
+      await _recordPracticeEvent(
         PracticeTelemetryEvent(
           type: 'tutor_result',
           turnId: turnId,
@@ -319,7 +327,7 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
         ),
       );
 
-      await _telemetryRepository.append(
+      await _recordPracticeEvent(
         PracticeTelemetryEvent(
           type: 'tts_result',
           turnId: turnId,
@@ -390,6 +398,18 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
     final double raw = 0.5 + min(letters, 25) / 50;
     return raw.clamp(0, 0.99);
   }
+
+  Future<void> _recordPracticeEvent(PracticeTelemetryEvent event) async {
+    await _telemetryRepository.append(event);
+    await _syncQueueRepository.enqueue(
+      SyncQueueItem(
+        type: 'practice_event_append',
+        payload: event.toMap(),
+        createdAtIso: event.occurredAtIso,
+      ),
+    );
+    await _syncService.syncAll();
+  }
 }
 
 final Provider<AiBridgePlatform> aiBridgeProvider =
@@ -419,6 +439,10 @@ final StateNotifierProvider<AudioTurnController, AudioTurnState>
       ref.watch(onboardingRepositoryProvider);
   final PracticeReviewRepository reviewRepository =
       ref.watch(practiceReviewRepositoryProvider);
+  final SyncQueueRepository syncQueueRepository =
+      ref.watch(syncQueueRepositoryProvider);
+  final FirebaseSyncService syncService =
+      ref.watch(firebaseSyncServiceProvider);
   final SettingsValueStore store = ref.watch(settingsStoreProvider);
   final ModelHealthRepository health = ModelHealthRepository(store: store);
   return AudioTurnController(
@@ -427,5 +451,7 @@ final StateNotifierProvider<AudioTurnController, AudioTurnState>
     modelHealthRepository: health,
     onboardingRepository: onboardingRepository,
     reviewRepository: reviewRepository,
+    syncQueueRepository: syncQueueRepository,
+    syncService: syncService,
   );
 });

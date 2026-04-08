@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../firebase/firebase_sync.dart';
 import '../../l10n/fallback_strings.dart';
 import '../../l10n/language_packs.dart';
 import '../../onboarding/onboarding_controller.dart';
+import '../../onboarding/sync_queue.dart';
 import '../shared/placeholder_scaffold.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -12,6 +14,9 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final OnboardingState onboarding = ref.watch(onboardingControllerProvider);
+    final FirebaseSyncService syncService =
+        ref.watch(firebaseSyncServiceProvider);
+    final SyncQueueRepository queue = ref.watch(syncQueueRepositoryProvider);
 
     if (onboarding.profile == null) {
       return PlaceholderScaffold(
@@ -60,6 +65,47 @@ class ProfileScreen extends ConsumerWidget {
                 ],
               ),
             ),
+          ),
+          const SizedBox(height: 16),
+          FutureBuilder<List<SyncQueueItem>>(
+            future: queue.readAll(),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<SyncQueueItem>> snapshot) {
+              final int pending = snapshot.data?.length ?? 0;
+
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'cloud sync',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Text('pending items: $pending'),
+                      const SizedBox(height: 12),
+                      OutlinedButton.icon(
+                        onPressed: () async {
+                          final int processed = await syncService.syncAll();
+                          if (!context.mounted) {
+                            return;
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('synced $processed item(s)'),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.sync),
+                        label: const Text('sync now'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16),
           Card(

@@ -31,13 +31,22 @@ class OnboardingRepository {
   }
 
   Future<void> saveProfileLocalFirst(OnboardingProfile profile) async {
-    await _encryptedStore.writeString(_profileKey, jsonEncode(profile.toMap()));
+    final String nowIso = DateTime.now().toUtc().toIso8601String();
+    final OnboardingProfile profileToPersist = profile.updatedAtIso.isEmpty
+        ? profile.copyWith(updatedAtIso: nowIso)
+        : profile;
+
+    await writeProfileOnly(profileToPersist);
     await _syncQueue.enqueue(
       SyncQueueItem(
         type: 'onboarding_profile_upsert',
-        payload: profile.toMap(),
-        createdAtIso: DateTime.now().toUtc().toIso8601String(),
+        payload: profileToPersist.toMap(),
+        createdAtIso: profileToPersist.updatedAtIso,
       ),
     );
+  }
+
+  Future<void> writeProfileOnly(OnboardingProfile profile) async {
+    await _encryptedStore.writeString(_profileKey, jsonEncode(profile.toMap()));
   }
 }

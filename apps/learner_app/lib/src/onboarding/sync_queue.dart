@@ -59,9 +59,17 @@ class SyncQueueRepository {
   Future<void> enqueue(SyncQueueItem item) async {
     final List<SyncQueueItem> existing = await readAll();
     final List<SyncQueueItem> next = <SyncQueueItem>[...existing, item];
+    await replaceAll(next);
+  }
+
+  Future<void> replaceAll(List<SyncQueueItem> items) async {
     final String raw = jsonEncode(
-      next.map((SyncQueueItem e) => e.toMap()).toList(growable: false),
+      items.map((SyncQueueItem e) => e.toMap()).toList(growable: false),
     );
     await _store.writeString(_queueKey, raw);
+  }
+
+  Future<void> clear() async {
+    await replaceAll(const <SyncQueueItem>[]);
   }
 }

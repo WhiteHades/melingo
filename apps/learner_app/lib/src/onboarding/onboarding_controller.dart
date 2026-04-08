@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../firebase/firebase_sync.dart';
 import '../state/settings_state.dart';
 import 'onboarding_profile.dart';
 import 'onboarding_repository.dart';
@@ -30,11 +31,13 @@ class OnboardingState {
 }
 
 class OnboardingController extends StateNotifier<OnboardingState> {
-  OnboardingController(this._repository) : super(const OnboardingState()) {
+  OnboardingController(this._repository, this._syncService)
+      : super(const OnboardingState()) {
     load();
   }
 
   final OnboardingRepository _repository;
+  final FirebaseSyncService _syncService;
 
   Future<void> load() async {
     final OnboardingProfile? profile = await _repository.readProfile();
@@ -45,6 +48,7 @@ class OnboardingController extends StateNotifier<OnboardingState> {
     state = state.copyWith(isSaving: true, saveError: null);
     try {
       await _repository.saveProfileLocalFirst(profile);
+      await _syncService.syncAll();
       state =
           state.copyWith(profile: profile, isSaving: false, saveError: null);
     } catch (error) {
@@ -82,5 +86,7 @@ final StateNotifierProvider<OnboardingController, OnboardingState>
     StateNotifierProvider<OnboardingController, OnboardingState>((Ref ref) {
   final OnboardingRepository repository =
       ref.watch(onboardingRepositoryProvider);
-  return OnboardingController(repository);
+  final FirebaseSyncService syncService =
+      ref.watch(firebaseSyncServiceProvider);
+  return OnboardingController(repository, syncService);
 });
