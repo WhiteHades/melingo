@@ -62,7 +62,7 @@ class SettingsRepository {
               secretMaterialStore ?? FlutterSecureSecretMaterialStore(),
         );
 
-  static const String _storageKey = 'melingo_settings_v2';
+  static const String _storageKey = 'melangua_settings_v2';
 
   final SettingsValueStore _settingsStore;
   final SettingsCipher _cipher;
@@ -169,6 +169,41 @@ class InMemorySecretMaterialStore implements SecretMaterialStore {
   }
 }
 
+class EncryptedSettingsValueStore implements SettingsValueStore {
+  EncryptedSettingsValueStore({
+    required SettingsValueStore inner,
+    required SecretMaterialStore secretMaterialStore,
+  })  : _inner = inner,
+        _cipher = SettingsCipher(secretMaterialStore: secretMaterialStore);
+
+  final SettingsValueStore _inner;
+  final SettingsCipher _cipher;
+
+  @override
+  Future<String?> readString(String key) async {
+    final String? raw = await _inner.readString(key);
+    if (raw == null || raw.isEmpty) {
+      return raw;
+    }
+
+    try {
+      final EncryptedPayload payload = EncryptedPayload.fromJson(
+        jsonDecode(raw) as Map<String, dynamic>,
+      );
+      return await _cipher.decrypt(payload);
+    } catch (_) {
+      // Preserve access to any plaintext values written before encryption was enforced.
+      return raw;
+    }
+  }
+
+  @override
+  Future<void> writeString(String key, String value) async {
+    final EncryptedPayload payload = await _cipher.encrypt(value);
+    await _inner.writeString(key, jsonEncode(payload.toJson()));
+  }
+}
+
 class EncryptedPayload {
   const EncryptedPayload({
     required this.nonce,
@@ -204,7 +239,7 @@ class SettingsCipher {
   })  : _secretMaterialStore = secretMaterialStore,
         _algorithm = algorithm ?? AesGcm.with256bits();
 
-  static const String _keyAlias = 'melingo_settings_aes_key_v1';
+  static const String _keyAlias = 'melangua_settings_aes_key_v1';
 
   final SecretMaterialStore _secretMaterialStore;
   final AesGcm _algorithm;
@@ -277,12 +312,23 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
 
 final Provider<SettingsRepository> settingsRepositoryProvider =
     Provider<SettingsRepository>((Ref ref) {
-  return SettingsRepository();
+  final SettingsValueStore store = ref.watch(settingsStoreProvider);
+  final SecretMaterialStore secretMaterialStore =
+      ref.watch(secretMaterialStoreProvider);
+  return SettingsRepository(
+    settingsStore: store,
+    secretMaterialStore: secretMaterialStore,
+  );
 });
 
 final Provider<SettingsValueStore> settingsStoreProvider =
     Provider<SettingsValueStore>((Ref ref) {
   return SharedPreferencesSettingsStore();
+});
+
+final Provider<SecretMaterialStore> secretMaterialStoreProvider =
+    Provider<SecretMaterialStore>((Ref ref) {
+  return FlutterSecureSecretMaterialStore();
 });
 
 final StateNotifierProvider<SettingsNotifier, AppSettings> settingsProvider =

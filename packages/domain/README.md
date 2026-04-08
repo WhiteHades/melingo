@@ -1,6 +1,6 @@
-# domain
+# Domain
 
-Core domain models and use-case contracts for melingo.
+Core domain models and use-case contracts for Melangua.
 
 ## scope
 

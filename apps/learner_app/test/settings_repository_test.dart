@@ -46,7 +46,7 @@ void main() {
 
       await repository.write(AppSettings.defaults);
 
-      final String? raw = await store.readString('melingo_settings_v2');
+      final String? raw = await store.readString('melangua_settings_v2');
       expect(raw, isNotNull);
       final Map<String, dynamic> parsed =
           jsonDecode(raw!) as Map<String, dynamic>;

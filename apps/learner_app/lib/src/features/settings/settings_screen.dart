@@ -67,9 +67,104 @@ class SettingsScreen extends ConsumerWidget {
                 context.push('/models');
               },
             ),
+            const SizedBox(height: 16),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      FallbackStrings.privacyCardTitle(context),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(FallbackStrings.privacyCardBody(context)),
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      FallbackStrings.secureTransportTitle(context),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(FallbackStrings.secureTransportBody(context)),
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      FallbackStrings.licenseCardTitle(context),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(FallbackStrings.licenseCardBody(context)),
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      FallbackStrings.donationTitle(context),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(FallbackStrings.donationBody(context)),
+                    const SizedBox(height: 12),
+                    SelectableText(FallbackStrings.donationLink(context)),
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        _showSupportDialog(context);
+                      },
+                      icon: const Icon(Icons.favorite_border),
+                      label: Text(FallbackStrings.donationAction(context)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showSupportDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(FallbackStrings.donationTitle(dialogContext)),
+          content: SelectableText(FallbackStrings.donationLink(dialogContext)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(FallbackStrings.cancelAction(dialogContext)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

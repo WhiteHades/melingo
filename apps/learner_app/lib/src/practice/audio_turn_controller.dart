@@ -384,7 +384,12 @@ final Provider<PracticeTelemetryRepository>
     practiceTelemetryRepositoryProvider =
     Provider<PracticeTelemetryRepository>((Ref ref) {
   final SettingsValueStore store = ref.watch(settingsStoreProvider);
-  return PracticeTelemetryRepository(store: store);
+  final SecretMaterialStore secretMaterialStore =
+      ref.watch(secretMaterialStoreProvider);
+  return PracticeTelemetryRepository(
+    store: store,
+    secretMaterialStore: secretMaterialStore,
+  );
 });
 
 final StateNotifierProvider<AudioTurnController, AudioTurnState>

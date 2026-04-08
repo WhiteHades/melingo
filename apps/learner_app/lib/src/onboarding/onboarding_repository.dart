@@ -8,16 +8,20 @@ class OnboardingRepository {
   OnboardingRepository({
     required SettingsValueStore store,
     required SyncQueueRepository syncQueue,
-  })  : _store = store,
+    required SecretMaterialStore secretMaterialStore,
+  })  : _encryptedStore = EncryptedSettingsValueStore(
+          inner: store,
+          secretMaterialStore: secretMaterialStore,
+        ),
         _syncQueue = syncQueue;
 
-  static const String _profileKey = 'melingo_onboarding_profile_v1';
+  static const String _profileKey = 'melangua_onboarding_profile_v1';
 
-  final SettingsValueStore _store;
+  final SettingsValueStore _encryptedStore;
   final SyncQueueRepository _syncQueue;
 
   Future<OnboardingProfile?> readProfile() async {
-    final String? raw = await _store.readString(_profileKey);
+    final String? raw = await _encryptedStore.readString(_profileKey);
     if (raw == null || raw.isEmpty) {
       return null;
     }
@@ -27,7 +31,7 @@ class OnboardingRepository {
   }
 
   Future<void> saveProfileLocalFirst(OnboardingProfile profile) async {
-    await _store.writeString(_profileKey, jsonEncode(profile.toMap()));
+    await _encryptedStore.writeString(_profileKey, jsonEncode(profile.toMap()));
     await _syncQueue.enqueue(
       SyncQueueItem(
         type: 'onboarding_profile_upsert',

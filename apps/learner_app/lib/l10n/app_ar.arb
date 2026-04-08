@@ -1,5 +1,5 @@
 {
-  "appName": "Melingo",
+  "appName": "Melangua",
   "homeTab": "الرئيسية",
   "practiceTab": "المحادثة",
   "statsTab": "الإحصاءات",
@@ -12,7 +12,7 @@
   "libraryTitle": "المكتبة",
   "libraryDescription": "ستظهر هنا السيناريوهات والتمارين وملاحظات القواعد وبطاقات المفردات.",
   "settingsTitle": "الإعدادات",
-  "settingsPrivacyDescription": "إعدادات افتراضية تضع الخصوصية أولا في melingo.",
+  "settingsPrivacyDescription": "إعدادات افتراضية تضع الخصوصية أولا في Melangua.",
   "diagnosticsOptIn": "تفعيل التشخيص",
   "diagnosticsDescription": "متوقف افتراضيا. يفعّل تشخيصات الأعطال والأداء المجهولة.",
   "storeRawAudio": "حفظ الصوت الخام محليا",
@@ -71,5 +71,15 @@
   "interruptionsLabel": "المقاطعات",
   "topMistakeTags": "أكثر وسوم الأخطاء تكرارا",
   "noMistakeTagsYet": "لا توجد وسوم أخطاء بعد",
+  "privacyCardTitle": "إعدادات الخصوصية الافتراضية",
+  "privacyCardBody": "يتم تشفير ملف الإعداد الأولي وقائمة المزامنة وقياسات التمرين محليا. تبقى التشخيصات والاحتفاظ بالصوت الخام متوقفة حتى يفعّلها المتعلم.",
+  "secureTransportTitle": "نقل آمن",
+  "secureTransportBody": "يجب أن تستخدم الطلبات البعيدة الخاصة بالمانيفست والخلفية نقاط HTTPS قبل أن يتصل التطبيق.",
+  "licenseCardTitle": "الترخيص والإفصاح",
+  "licenseCardBody": "المستودع عام حاليا. لم يتم اعتماد ترخيص نهائي للمشروع بعد، لذلك يعرض التطبيق هذه الحالة بصراحة.",
+  "donationTitle": "ادعم Melangua",
+  "donationBody": "إذا كان التطبيق يساعدك على التعلم بشكل أسرع، يمكنك دعم التطوير. التبرعات لا تفتح الميزات الأساسية ولا تمنع أي مسار تعلم.",
+  "donationAction": "اعرض رابط الدعم",
+  "donationLink": "https://github.com/sponsors/WhiteHades",
   "trendSummary": "ستتم إضافة نوافذ الاتجاه 7 و30 و90 يوما مع التقسيم حسب اللغة في المرحلة التالية."
 }

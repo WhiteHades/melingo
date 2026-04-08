@@ -235,7 +235,7 @@ class AdaptiveShell extends StatelessWidget {
   }
 }
 
-ThemeData melingoLightTheme() {
+ThemeData melanguaLightTheme() {
   final ColorScheme colorScheme = ColorScheme.fromSeed(
     seedColor: AppColors.seed,
     brightness: Brightness.light,
@@ -256,7 +256,7 @@ ThemeData melingoLightTheme() {
   );
 }
 
-ThemeData melingoDarkTheme() {
+ThemeData melanguaDarkTheme() {
   final ColorScheme colorScheme = ColorScheme.fromSeed(
     seedColor: AppColors.seed,
     brightness: Brightness.dark,

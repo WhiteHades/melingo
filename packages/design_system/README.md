@@ -1,6 +1,6 @@
-# design_system
+# Design System
 
-Token and widget primitives for melingo.
+Token and widget primitives for Melangua.
 
 ## scope
 

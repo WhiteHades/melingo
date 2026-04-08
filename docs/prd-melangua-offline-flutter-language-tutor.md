@@ -1,4 +1,4 @@
-# PRD: Melingo - Offline-First Flutter AI Language Tutor
+# PRD: Melangua - Offline-First Flutter AI Language Tutor
 
 ## Problem Statement
 
@@ -6,7 +6,7 @@ Learners who want practical speaking practice in Arabic and German are forced in
 
 ## Solution
 
-Build a Flutter-first monorepo delivering a speaking-first language tutor with a custom token-driven design system inspired by shadcn Luma. The runtime loop is Mic -> ASR -> Tutor LLM -> TTS -> Speaker, backed by an offline-first local data model and a thin FastAPI + Postgres/Supabase backend for sync, auth, manifests, and aggregated analytics. AI runtimes are modular and replaceable behind interfaces, model artifacts are downloaded post-install via model bundles, and all sensitive data paths are encrypted in transit and at rest.
+Build a Flutter-first monorepo delivering a speaking-first language tutor with a custom token-driven design system inspired by shadcn Luma. The runtime loop is Mic -> ASR -> Tutor LLM -> TTS -> Speaker, backed by an offline-first local data model and a thin FastAPI + Firebase backend for sync, auth, manifests, and aggregated analytics. AI runtimes are modular and replaceable behind interfaces, model artifacts are downloaded post-install via model bundles, and all sensitive data paths are encrypted in transit and at rest.
 
 ## User Stories
 
@@ -63,7 +63,7 @@ Build a Flutter-first monorepo delivering a speaking-first language tutor with a
 - AI runtime adapters are replaceable behind interfaces so language/model changes do not affect feature UI.
 - Native inference is handled through a bridge layer (Rust or C++), with platform adapters only for unavoidable OS surfaces.
 - Audio orchestration is state-machine driven, not widget driven, to avoid race conditions and duplex bugs.
-- Backend remains intentionally thin (FastAPI + Postgres/Supabase) and does not serve core real-time inference.
+- Backend remains intentionally thin (FastAPI + Firebase) and does not serve core real-time inference.
 - Sync model is offline-first: local write-through queue, background sync, conflict resolution by timestamp + server version semantics.
 - Analytics model is immutable event-first with derived daily/weekly aggregates and materialized summaries.
 - Session entities include session, turns, feedback, mistakes, and AI timing/confidence telemetry for deep drill-downs.

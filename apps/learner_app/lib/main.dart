@@ -5,19 +5,21 @@ import 'package:flutter/semantics.dart';
 
 import 'l10n/app_localizations.dart';
 import 'src/app.dart';
+import 'src/firebase/firebase_bootstrap.dart';
 import 'src/l10n/language_packs.dart';
 import 'src/onboarding/onboarding_controller.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FirebaseBootstrap.initialize();
   if (kIsWeb) {
     SemanticsBinding.instance.ensureSemantics();
   }
-  runApp(const ProviderScope(child: MelingoApp()));
+  runApp(const ProviderScope(child: MelanguaApp()));
 }
 
-class MelingoApp extends ConsumerWidget {
-  const MelingoApp({super.key});
+class MelanguaApp extends ConsumerWidget {
+  const MelanguaApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,12 +28,12 @@ class MelingoApp extends ConsumerWidget {
         resolveLanguagePack(onboarding.profile?.languageCode);
 
     return MaterialApp.router(
-      title: 'Melingo',
+      title: 'Melangua',
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: languagePack.locale,
-      theme: melingoLightTheme(),
-      darkTheme: melingoDarkTheme(),
+      theme: melanguaLightTheme(),
+      darkTheme: melanguaDarkTheme(),
       themeMode: ThemeMode.system,
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,

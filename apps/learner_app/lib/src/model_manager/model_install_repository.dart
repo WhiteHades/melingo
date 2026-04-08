@@ -6,7 +6,7 @@ import '../state/settings_state.dart';
 class ModelInstallRepository {
   ModelInstallRepository({required SettingsValueStore store}) : _store = store;
 
-  static const String _installKey = 'melingo_model_install_state_v1';
+  static const String _installKey = 'melangua_model_install_state_v1';
 
   final SettingsValueStore _store;
 

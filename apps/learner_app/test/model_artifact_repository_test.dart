@@ -11,7 +11,7 @@ void main() {
     final List<int> first = await repository.readOrDownload('lite');
     final List<int> second = await repository.readOrDownload('lite');
 
-    expect(String.fromCharCodes(first), 'melingo-lite-model-v1');
-    expect(String.fromCharCodes(second), 'melingo-lite-model-v1');
+    expect(String.fromCharCodes(first), 'melangua-lite-model-v1');
+    expect(String.fromCharCodes(second), 'melangua-lite-model-v1');
   });
 }

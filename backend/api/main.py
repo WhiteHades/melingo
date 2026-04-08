@@ -10,7 +10,7 @@ from .state import ApiState
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="melingo api", version="0.1.0")
+    app = FastAPI(title="melangua api", version="0.1.0")
     app.state.api_state = ApiState()
     app.include_router(auth_router, prefix="/v1")
     app.include_router(health_router, prefix="/v1")

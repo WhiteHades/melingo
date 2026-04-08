@@ -5,7 +5,11 @@ import 'package:learner_app/src/state/settings_state.dart';
 void main() {
   test('enqueue appends items and readAll returns ordered queue', () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
-    final SyncQueueRepository repository = SyncQueueRepository(store: store);
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
+    final SyncQueueRepository repository = SyncQueueRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
 
     await repository.enqueue(
       const SyncQueueItem(

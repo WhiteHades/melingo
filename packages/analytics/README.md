@@ -1,6 +1,6 @@
-# analytics
+# Analytics
 
-Event schemas and aggregate calculators for melingo stats.
+Event schemas and aggregate calculators for Melangua stats.
 
 ## scope
 

@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incomingOwner() {
+      return isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    function storedOwner() {
+      return isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    match /profiles/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    match /goals/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    match /sessions/{sessionId} {
+      allow create: if incomingOwner();
+      allow read, update, delete: if storedOwner();
+    }
+
+    match /session_turns/{turnId} {
+      allow create: if incomingOwner();
+      allow read, update, delete: if storedOwner();
+    }
+
+    match /daily_stats/{statId} {
+      allow create: if incomingOwner();
+      allow read, update, delete: if storedOwner();
+    }
+
+    match /model_installs/{installId} {
+      allow create: if incomingOwner();
+      allow read, update, delete: if storedOwner();
+    }
+
+    match /practice_events/{eventId} {
+      allow create: if incomingOwner();
+      allow read, update, delete: if storedOwner();
+    }
+
+    match /public_manifests/{manifestId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

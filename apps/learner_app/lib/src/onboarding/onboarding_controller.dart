@@ -56,14 +56,25 @@ class OnboardingController extends StateNotifier<OnboardingState> {
 final Provider<SyncQueueRepository> syncQueueRepositoryProvider =
     Provider<SyncQueueRepository>((Ref ref) {
   final SettingsValueStore store = ref.watch(settingsStoreProvider);
-  return SyncQueueRepository(store: store);
+  final SecretMaterialStore secretMaterialStore =
+      ref.watch(secretMaterialStoreProvider);
+  return SyncQueueRepository(
+    store: store,
+    secretMaterialStore: secretMaterialStore,
+  );
 });
 
 final Provider<OnboardingRepository> onboardingRepositoryProvider =
     Provider<OnboardingRepository>((Ref ref) {
   final SettingsValueStore store = ref.watch(settingsStoreProvider);
+  final SecretMaterialStore secretMaterialStore =
+      ref.watch(secretMaterialStoreProvider);
   final SyncQueueRepository queue = ref.watch(syncQueueRepositoryProvider);
-  return OnboardingRepository(store: store, syncQueue: queue);
+  return OnboardingRepository(
+    store: store,
+    syncQueue: queue,
+    secretMaterialStore: secretMaterialStore,
+  );
 });
 
 final StateNotifierProvider<OnboardingController, OnboardingState>

@@ -11,7 +11,7 @@ class ModelManifestRepository {
   })  : _client = client,
         _store = store;
 
-  static const String _cacheKey = 'melingo_model_manifest_cache_v1';
+  static const String _cacheKey = 'melangua_model_manifest_cache_v1';
 
   final ModelManifestClient _client;
   final SettingsValueStore _store;

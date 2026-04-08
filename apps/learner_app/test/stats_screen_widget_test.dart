@@ -9,8 +9,11 @@ void main() {
   testWidgets('stats screen renders KPI cards from telemetry',
       (WidgetTester tester) async {
     final InMemorySettingsStore store = InMemorySettingsStore();
-    final PracticeTelemetryRepository telemetry =
-        PracticeTelemetryRepository(store: store);
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
+    final PracticeTelemetryRepository telemetry = PracticeTelemetryRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
 
     await telemetry.append(
       const PracticeTelemetryEvent(
@@ -25,6 +28,7 @@ void main() {
       ProviderScope(
         overrides: <Override>[
           settingsStoreProvider.overrideWithValue(store),
+          secretMaterialStoreProvider.overrideWithValue(secrets),
         ],
         child: const MaterialApp(
           home: Scaffold(body: StatsScreen()),

@@ -5,13 +5,17 @@ import 'package:http/http.dart' as http;
 import '../models/model_manifest.dart' as manifest_model;
 
 class ModelManifestClient {
-  ModelManifestClient({http.Client? client})
-      : _client = client ?? http.Client();
+  ModelManifestClient({http.Client? client, Uri? baseUri})
+      : _client = client ?? http.Client(),
+        _baseUri = _requireSecureBaseUri(
+          baseUri ?? Uri.https('melangua-efaz.web.app'),
+        );
 
   final http.Client _client;
+  final Uri _baseUri;
 
   Future<manifest_model.ModelManifest> fetchManifest() async {
-    final Uri uri = Uri.https('api.melingo.app', '/v1/models/manifest');
+    final Uri uri = _baseUri.replace(path: '/model-manifest.json');
     final http.Response response = await _client.get(uri);
 
     if (response.statusCode != 200) {
@@ -34,6 +38,13 @@ class ModelManifestClient {
       'version': map['version'] as String? ?? 'unknown',
       'bundles': normalized,
     };
+  }
+
+  static Uri _requireSecureBaseUri(Uri baseUri) {
+    if (baseUri.scheme != 'https') {
+      throw ArgumentError('remote manifest endpoints must use https');
+    }
+    return baseUri;
   }
 
   Map<String, dynamic> _defaultsForBundle(String id) {

@@ -14,11 +14,15 @@ class StatsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final SettingsValueStore store = ref.watch(settingsStoreProvider);
+    final SecretMaterialStore secretMaterialStore =
+        ref.watch(secretMaterialStoreProvider);
     final OnboardingState onboarding = ref.watch(onboardingControllerProvider);
     final LanguagePack languagePack =
         resolveLanguagePack(onboarding.profile?.languageCode);
-    final PracticeTelemetryRepository repository =
-        PracticeTelemetryRepository(store: store);
+    final PracticeTelemetryRepository repository = PracticeTelemetryRepository(
+      store: store,
+      secretMaterialStore: secretMaterialStore,
+    );
 
     return FutureBuilder<List<PracticeTelemetryEvent>>(
       future: repository.readAll(),

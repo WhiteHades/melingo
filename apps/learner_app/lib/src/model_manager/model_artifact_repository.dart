@@ -5,7 +5,7 @@ import '../state/settings_state.dart';
 class ModelArtifactRepository {
   ModelArtifactRepository({required SettingsValueStore store}) : _store = store;
 
-  static const String _artifactKeyPrefix = 'melingo_model_artifact_v1_';
+  static const String _artifactKeyPrefix = 'melangua_model_artifact_v1_';
 
   final SettingsValueStore _store;
 
@@ -33,7 +33,7 @@ class ModelArtifactRepository {
   }
 
   List<int> _download(String bundleId) {
-    return utf8.encode('melingo-$bundleId-model-v1');
+    return utf8.encode('melangua-$bundleId-model-v1');
   }
 
   String _storageKey(String bundleId) {

@@ -1,12 +1,16 @@
 {
-  "name": "melingo-monorepo",
+  "name": "melangua-monorepo",
   "private": true,
   "version": "0.1.0",
-  "description": "tooling shell for melingo monorepo",
+  "description": "Offline-first Flutter language tutor monorepo for Melangua",
   "scripts": {
     "typecheck": "python3 -m compileall backend/api",
     "test": "python3 -m pytest backend/api/tests",
     "lint": "python3 -m ruff check backend/api",
+    "firebase:use": "npx -y firebase-tools@latest use melangua-efaz",
+    "firebase:emulators": "npx -y firebase-tools@latest emulators:start",
+    "firebase:deploy:rules": "npx -y firebase-tools@latest deploy --only firestore:rules,firestore:indexes,storage",
+    "firebase:hosting:preview": "npx -y firebase-tools@latest hosting:channel:deploy preview",
     "prepare": "husky"
   },
   "devDependencies": {

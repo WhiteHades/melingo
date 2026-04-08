@@ -9,7 +9,7 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get appName => 'Melingo';
+  String get appName => 'Melangua';
 
   @override
   String get homeTab => 'Start';
@@ -51,7 +51,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsPrivacyDescription =>
-      'Datenschutzorientierte Standards fuer melingo.';
+      'Datenschutzorientierte Standards fuer Melangua.';
 
   @override
   String get diagnosticsOptIn => 'Diagnose aktivieren';
@@ -232,6 +232,40 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get noMistakeTagsYet => 'Noch keine Fehlertags';
+
+  @override
+  String get privacyCardTitle => 'Datenschutz-Standards';
+
+  @override
+  String get privacyCardBody =>
+      'Onboarding-Profil, Sync-Warteschlange und Uebungstelemetrie werden lokal verschluesselt. Diagnosen und Roh-Audio bleiben aus, bis Lernende aktiv zustimmen.';
+
+  @override
+  String get secureTransportTitle => 'Sicherer Transport';
+
+  @override
+  String get secureTransportBody =>
+      'Remote-Manifest- und Backend-Aufrufe muessen HTTPS verwenden, bevor sich die App verbindet.';
+
+  @override
+  String get licenseCardTitle => 'Lizenz und Offenlegung';
+
+  @override
+  String get licenseCardBody =>
+      'Das Repository ist oeffentlich sichtbar. Die Projektlizenz ist noch nicht final, deshalb zeigt die App diesen Status offen an.';
+
+  @override
+  String get donationTitle => 'Melangua unterstuetzen';
+
+  @override
+  String get donationBody =>
+      'Wenn dir die App beim Lernen hilft, kannst du die Entwicklung unterstuetzen. Spenden schalten keine Kernfunktionen frei und blockieren keine Lernablaeufe.';
+
+  @override
+  String get donationAction => 'Support-Link anzeigen';
+
+  @override
+  String get donationLink => 'https://github.com/sponsors/WhiteHades';
 
   @override
   String get trendSummary =>

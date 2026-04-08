@@ -5,8 +5,11 @@ import 'package:learner_app/src/state/settings_state.dart';
 void main() {
   test('append writes immutable ordered telemetry events', () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
-    final PracticeTelemetryRepository repository =
-        PracticeTelemetryRepository(store: store);
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
+    final PracticeTelemetryRepository repository = PracticeTelemetryRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
 
     await repository.append(
       const PracticeTelemetryEvent(

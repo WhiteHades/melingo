@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Melingo'**
+  /// **'Melangua'**
   String get appName;
 
   /// No description provided for @homeTab.
@@ -181,7 +181,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsPrivacyDescription.
   ///
   /// In en, this message translates to:
-  /// **'Privacy first defaults for melingo.'**
+  /// **'Privacy first defaults for Melangua.'**
   String get settingsPrivacyDescription;
 
   /// No description provided for @diagnosticsOptIn.
@@ -531,6 +531,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No mistake tags yet'**
   String get noMistakeTagsYet;
+
+  /// No description provided for @privacyCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy defaults'**
+  String get privacyCardTitle;
+
+  /// No description provided for @privacyCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Onboarding profile, sync queue, and practice telemetry are encrypted locally. Diagnostics and raw audio retention stay off until the learner opts in.'**
+  String get privacyCardBody;
+
+  /// No description provided for @secureTransportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure transport'**
+  String get secureTransportTitle;
+
+  /// No description provided for @secureTransportBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Remote manifest and backend traffic must use HTTPS endpoints before the app will connect.'**
+  String get secureTransportBody;
+
+  /// No description provided for @licenseCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'License and disclosure'**
+  String get licenseCardTitle;
+
+  /// No description provided for @licenseCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Repository visibility is public. The project license is not finalized yet, so the app surfaces that status directly instead of pretending otherwise.'**
+  String get licenseCardBody;
+
+  /// No description provided for @donationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Melangua'**
+  String get donationTitle;
+
+  /// No description provided for @donationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If the app helps you learn faster, you can support development. Donations never unlock core features or gate learning flows.'**
+  String get donationBody;
+
+  /// No description provided for @donationAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View support link'**
+  String get donationAction;
+
+  /// No description provided for @donationLink.
+  ///
+  /// In en, this message translates to:
+  /// **'https://github.com/sponsors/WhiteHades'**
+  String get donationLink;
 
   /// No description provided for @trendSummary.
   ///

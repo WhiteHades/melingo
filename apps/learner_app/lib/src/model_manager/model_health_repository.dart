@@ -6,7 +6,7 @@ import '../state/settings_state.dart';
 class ModelHealthRepository {
   ModelHealthRepository({required SettingsValueStore store}) : _store = store;
 
-  static const String _healthKey = 'melingo_model_health_v1';
+  static const String _healthKey = 'melangua_model_health_v1';
 
   final SettingsValueStore _store;
 

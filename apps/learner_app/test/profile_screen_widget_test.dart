@@ -12,10 +12,15 @@ void main() {
   testWidgets('profile screen shows onboarding values when available',
       (WidgetTester tester) async {
     final InMemorySettingsStore store = InMemorySettingsStore();
-    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
+    final SyncQueueRepository queue = SyncQueueRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
     final OnboardingRepository repository = OnboardingRepository(
       store: store,
       syncQueue: queue,
+      secretMaterialStore: secrets,
     );
 
     await repository.saveProfileLocalFirst(
@@ -31,6 +36,7 @@ void main() {
       ProviderScope(
         overrides: <Override>[
           settingsStoreProvider.overrideWithValue(store),
+          secretMaterialStoreProvider.overrideWithValue(secrets),
           syncQueueRepositoryProvider.overrideWithValue(queue),
           onboardingRepositoryProvider.overrideWithValue(repository),
         ],

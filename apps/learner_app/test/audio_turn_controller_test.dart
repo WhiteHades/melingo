@@ -74,6 +74,7 @@ class _FakeAiBridge implements AiBridgePlatform {
 void main() {
   test('audio turn controller records transcript and telemetry', () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
     final ModelHealthRepository healthRepository =
         ModelHealthRepository(store: store);
     await healthRepository.write(
@@ -87,13 +88,22 @@ void main() {
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
+        secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(_FakeAiBridge()),
-        syncQueueRepositoryProvider
-            .overrideWithValue(SyncQueueRepository(store: store)),
+        syncQueueRepositoryProvider.overrideWithValue(
+          SyncQueueRepository(
+            store: store,
+            secretMaterialStore: secrets,
+          ),
+        ),
         onboardingRepositoryProvider.overrideWithValue(
           OnboardingRepository(
             store: store,
-            syncQueue: SyncQueueRepository(store: store),
+            syncQueue: SyncQueueRepository(
+              store: store,
+              secretMaterialStore: secrets,
+            ),
+            secretMaterialStore: secrets,
           ),
         ),
       ],
@@ -130,15 +140,21 @@ void main() {
 
   test('replayAssistantTurn emits replay telemetry', () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
     final _FakeAiBridge fakeBridge = _FakeAiBridge();
-    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final SyncQueueRepository queue = SyncQueueRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
     final OnboardingRepository onboardingRepository = OnboardingRepository(
       store: store,
       syncQueue: queue,
+      secretMaterialStore: secrets,
     );
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
+        secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(fakeBridge),
         syncQueueRepositoryProvider.overrideWithValue(queue),
         onboardingRepositoryProvider.overrideWithValue(onboardingRepository),
@@ -164,16 +180,22 @@ void main() {
   test('stopSpeaking interrupts playback and emits interruption telemetry',
       () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
     final _FakeAiBridge fakeBridge = _FakeAiBridge();
-    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final SyncQueueRepository queue = SyncQueueRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
     final OnboardingRepository onboardingRepository = OnboardingRepository(
       store: store,
       syncQueue: queue,
+      secretMaterialStore: secrets,
     );
 
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
+        secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(fakeBridge),
         syncQueueRepositoryProvider.overrideWithValue(queue),
         onboardingRepositoryProvider.overrideWithValue(onboardingRepository),
@@ -204,16 +226,22 @@ void main() {
   test('startRecording while speaking interrupts and starts new turn',
       () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
     final _FakeAiBridge fakeBridge = _FakeAiBridge()..ttsRepeat = 400;
-    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final SyncQueueRepository queue = SyncQueueRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
     final OnboardingRepository onboardingRepository = OnboardingRepository(
       store: store,
       syncQueue: queue,
+      secretMaterialStore: secrets,
     );
 
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
+        secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(fakeBridge),
         syncQueueRepositoryProvider.overrideWithValue(queue),
         onboardingRepositoryProvider.overrideWithValue(onboardingRepository),
@@ -242,17 +270,27 @@ void main() {
 
   test('cancelRecording transitions to cancelled', () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
 
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
+        secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(_FakeAiBridge()),
-        syncQueueRepositoryProvider
-            .overrideWithValue(SyncQueueRepository(store: store)),
+        syncQueueRepositoryProvider.overrideWithValue(
+          SyncQueueRepository(
+            store: store,
+            secretMaterialStore: secrets,
+          ),
+        ),
         onboardingRepositoryProvider.overrideWithValue(
           OnboardingRepository(
             store: store,
-            syncQueue: SyncQueueRepository(store: store),
+            syncQueue: SyncQueueRepository(
+              store: store,
+              secretMaterialStore: secrets,
+            ),
+            secretMaterialStore: secrets,
           ),
         ),
       ],
@@ -272,11 +310,16 @@ void main() {
   test('tutor telemetry carries taxonomy metadata for selected language',
       () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
     final _FakeAiBridge fakeBridge = _FakeAiBridge();
-    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final SyncQueueRepository queue = SyncQueueRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
     final OnboardingRepository onboardingRepository = OnboardingRepository(
       store: store,
       syncQueue: queue,
+      secretMaterialStore: secrets,
     );
 
     await onboardingRepository.saveProfileLocalFirst(
@@ -291,6 +334,7 @@ void main() {
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
+        secretMaterialStoreProvider.overrideWithValue(secrets),
         aiBridgeProvider.overrideWithValue(fakeBridge),
         syncQueueRepositoryProvider.overrideWithValue(queue),
         onboardingRepositoryProvider.overrideWithValue(onboardingRepository),

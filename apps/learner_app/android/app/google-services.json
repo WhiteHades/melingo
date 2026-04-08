@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "195377435516",
+    "project_id": "melangua-efaz",
+    "storage_bucket": "melangua-efaz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195377435516:android:0d18270a98ee0f84c84af9",
+        "android_client_info": {
+          "package_name": "dev.melangua.learner_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmTxkjWT-6iepI92imCCegvDeWbvte62Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

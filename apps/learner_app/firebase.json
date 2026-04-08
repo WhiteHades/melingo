@@ -1,0 +1,25 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "melangua-efaz",
+          "appId": "1:195377435516:android:0d18270a98ee0f84c84af9",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "melangua-efaz",
+          "configurations": {
+            "android": "1:195377435516:android:0d18270a98ee0f84c84af9",
+            "ios": "1:195377435516:ios:bfdec0cbaca608fac84af9",
+            "macos": "1:195377435516:ios:bfdec0cbaca608fac84af9",
+            "web": "1:195377435516:web:52b70c56017d6af4c84af9",
+            "windows": "1:195377435516:web:ff2a30552911dbb2c84af9"
+          }
+        }
+      }
+    }
+  }
+}

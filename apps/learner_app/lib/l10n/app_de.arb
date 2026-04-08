@@ -1,5 +1,5 @@
 {
-  "appName": "Melingo",
+  "appName": "Melangua",
   "homeTab": "Start",
   "practiceTab": "Sprechen",
   "statsTab": "Statistiken",
@@ -12,7 +12,7 @@
   "libraryTitle": "Bibliothek",
   "libraryDescription": "Szenarien, Uebungen, Grammatiknotizen und Wortschatzdecks erscheinen hier.",
   "settingsTitle": "Einstellungen",
-  "settingsPrivacyDescription": "Datenschutzorientierte Standards fuer melingo.",
+  "settingsPrivacyDescription": "Datenschutzorientierte Standards fuer Melangua.",
   "diagnosticsOptIn": "Diagnose aktivieren",
   "diagnosticsDescription": "Standardmaessig aus. Aktiviert anonyme Absturz- und Leistungsdiagnosen.",
   "storeRawAudio": "Rohaudio lokal speichern",
@@ -71,5 +71,15 @@
   "interruptionsLabel": "Unterbrechungen",
   "topMistakeTags": "Hauefigste Fehlertags",
   "noMistakeTagsYet": "Noch keine Fehlertags",
+  "privacyCardTitle": "Datenschutz-Standards",
+  "privacyCardBody": "Onboarding-Profil, Sync-Warteschlange und Uebungstelemetrie werden lokal verschluesselt. Diagnosen und Roh-Audio bleiben aus, bis Lernende aktiv zustimmen.",
+  "secureTransportTitle": "Sicherer Transport",
+  "secureTransportBody": "Remote-Manifest- und Backend-Aufrufe muessen HTTPS verwenden, bevor sich die App verbindet.",
+  "licenseCardTitle": "Lizenz und Offenlegung",
+  "licenseCardBody": "Das Repository ist oeffentlich sichtbar. Die Projektlizenz ist noch nicht final, deshalb zeigt die App diesen Status offen an.",
+  "donationTitle": "Melangua unterstuetzen",
+  "donationBody": "Wenn dir die App beim Lernen hilft, kannst du die Entwicklung unterstuetzen. Spenden schalten keine Kernfunktionen frei und blockieren keine Lernablaeufe.",
+  "donationAction": "Support-Link anzeigen",
+  "donationLink": "https://github.com/sponsors/WhiteHades",
   "trendSummary": "Trendfenster (7/30/90) und sprachspezifische Aufschluesselungen kommen im naechsten Slice."
 }

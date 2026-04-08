@@ -14,7 +14,7 @@ class AccessibilityBanner extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         color: Theme.of(context).colorScheme.secondaryContainer,
         child: Text(
-          'melingo supports large text, screen readers, and rtl language packs.',
+          'Melangua supports large text, screen readers, and RTL language packs.',
           style: Theme.of(context).textTheme.bodyMedium,
         ),
       ),

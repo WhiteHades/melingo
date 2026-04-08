@@ -6,7 +6,7 @@ class FallbackStrings {
   const FallbackStrings._();
 
   static String appName(BuildContext context) =>
-      AppLocalizations.of(context)?.appName ?? 'Melingo';
+      AppLocalizations.of(context)?.appName ?? 'Melangua';
 
   static String homeTab(BuildContext context) =>
       AppLocalizations.of(context)?.homeTab ?? 'Home';
@@ -48,7 +48,7 @@ class FallbackStrings {
 
   static String settingsPrivacyDescription(BuildContext context) =>
       AppLocalizations.of(context)?.settingsPrivacyDescription ??
-      'Privacy first defaults for melingo.';
+      'Privacy first defaults for Melangua.';
 
   static String diagnosticsOptIn(BuildContext context) =>
       AppLocalizations.of(context)?.diagnosticsOptIn ?? 'Diagnostics opt-in';
@@ -80,6 +80,42 @@ class FallbackStrings {
   static String modelManagerDescription(BuildContext context) =>
       AppLocalizations.of(context)?.modelManagerDescription ??
       'Bundle setup and model health';
+
+  static String privacyCardTitle(BuildContext context) =>
+      AppLocalizations.of(context)?.privacyCardTitle ?? 'Privacy defaults';
+
+  static String privacyCardBody(BuildContext context) =>
+      AppLocalizations.of(context)?.privacyCardBody ??
+      'Onboarding profile, sync queue, and practice telemetry are encrypted locally. Diagnostics and raw audio retention stay off until the learner opts in.';
+
+  static String secureTransportTitle(BuildContext context) =>
+      AppLocalizations.of(context)?.secureTransportTitle ?? 'Secure transport';
+
+  static String secureTransportBody(BuildContext context) =>
+      AppLocalizations.of(context)?.secureTransportBody ??
+      'Remote manifest and backend traffic must use HTTPS endpoints before the app will connect.';
+
+  static String licenseCardTitle(BuildContext context) =>
+      AppLocalizations.of(context)?.licenseCardTitle ??
+      'License and disclosure';
+
+  static String licenseCardBody(BuildContext context) =>
+      AppLocalizations.of(context)?.licenseCardBody ??
+      'Repository visibility is public. The project license is not finalized yet, so the app surfaces that status directly instead of pretending otherwise.';
+
+  static String donationTitle(BuildContext context) =>
+      AppLocalizations.of(context)?.donationTitle ?? 'Support Melangua';
+
+  static String donationBody(BuildContext context) =>
+      AppLocalizations.of(context)?.donationBody ??
+      'If the app helps you learn faster, you can support development. Donations never unlock core features or gate learning flows.';
+
+  static String donationAction(BuildContext context) =>
+      AppLocalizations.of(context)?.donationAction ?? 'View support link';
+
+  static String donationLink(BuildContext context) =>
+      AppLocalizations.of(context)?.donationLink ??
+      'https://github.com/sponsors/WhiteHades';
 
   static String onboardingDisplayNameLabel(BuildContext context) =>
       AppLocalizations.of(context)?.onboardingDisplayNameLabel ??

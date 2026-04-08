@@ -1,6 +1,6 @@
 # ci
 
-Github actions and quality gates for melingo monorepo.
+GitHub Actions and quality gates for the Melangua monorepo.
 
 ## intended checks
 

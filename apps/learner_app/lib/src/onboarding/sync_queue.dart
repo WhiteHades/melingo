@@ -31,9 +31,15 @@ class SyncQueueItem {
 }
 
 class SyncQueueRepository {
-  SyncQueueRepository({required SettingsValueStore store}) : _store = store;
+  SyncQueueRepository({
+    required SettingsValueStore store,
+    required SecretMaterialStore secretMaterialStore,
+  }) : _store = EncryptedSettingsValueStore(
+          inner: store,
+          secretMaterialStore: secretMaterialStore,
+        );
 
-  static const String _queueKey = 'melingo_sync_queue_v1';
+  static const String _queueKey = 'melangua_sync_queue_v1';
 
   final SettingsValueStore _store;
 

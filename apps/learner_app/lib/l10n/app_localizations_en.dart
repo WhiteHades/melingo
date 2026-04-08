@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Melingo';
+  String get appName => 'Melangua';
 
   @override
   String get homeTab => 'Home';
@@ -51,7 +51,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsPrivacyDescription =>
-      'Privacy first defaults for melingo.';
+      'Privacy first defaults for Melangua.';
 
   @override
   String get diagnosticsOptIn => 'Diagnostics opt-in';
@@ -229,6 +229,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noMistakeTagsYet => 'No mistake tags yet';
+
+  @override
+  String get privacyCardTitle => 'Privacy defaults';
+
+  @override
+  String get privacyCardBody =>
+      'Onboarding profile, sync queue, and practice telemetry are encrypted locally. Diagnostics and raw audio retention stay off until the learner opts in.';
+
+  @override
+  String get secureTransportTitle => 'Secure transport';
+
+  @override
+  String get secureTransportBody =>
+      'Remote manifest and backend traffic must use HTTPS endpoints before the app will connect.';
+
+  @override
+  String get licenseCardTitle => 'License and disclosure';
+
+  @override
+  String get licenseCardBody =>
+      'Repository visibility is public. The project license is not finalized yet, so the app surfaces that status directly instead of pretending otherwise.';
+
+  @override
+  String get donationTitle => 'Support Melangua';
+
+  @override
+  String get donationBody =>
+      'If the app helps you learn faster, you can support development. Donations never unlock core features or gate learning flows.';
+
+  @override
+  String get donationAction => 'View support link';
+
+  @override
+  String get donationLink => 'https://github.com/sponsors/WhiteHades';
 
   @override
   String get trendSummary =>

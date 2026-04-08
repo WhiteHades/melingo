@@ -1,6 +1,6 @@
-# Plan: Melingo - Offline-First Flutter AI Language Tutor
+# Plan: Melangua - Offline-First Flutter AI Language Tutor
 
-> Source PRD: `docs/prd-melingo-offline-flutter-language-tutor.md`
+> Source PRD: `docs/prd-melangua-offline-flutter-language-tutor.md`
 
 ## Architectural decisions
 
@@ -155,7 +155,7 @@ Create stats overview using event-derived local aggregates for activity, perform
 
 ---
 
-## Phase 9: Sync + Auth Slice (Thin FastAPI + Supabase/Postgres)
+## Phase 9: Sync + Auth Slice (Thin FastAPI + Firebase)
 
 **User stories**: 23, 24, 38
 

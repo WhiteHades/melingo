@@ -1,8 +1,8 @@
-# Melingo Architecture (Phase 1 Baseline)
+# Melangua Architecture (Phase 1 Baseline)
 
 ## Overview
 
-Melingo follows a Flutter-first monorepo architecture with clear boundaries between UI, domain, data, AI runtime bridge, and backend sync services.
+Melangua follows a Flutter-first monorepo architecture with clear boundaries between UI, domain, data, AI runtime bridge, and backend sync services.
 
 Core runtime path:
 
@@ -15,7 +15,7 @@ Core runtime path:
 - Data: Repositories, local persistence, and sync orchestration in `packages/data`.
 - AI bridge: Native bindings/contracts for on-device inference in `packages/ai_bridge`.
 - Analytics: Event schemas and local aggregate calculators in `packages/analytics`.
-- Backend: Thin FastAPI API for sync, manifests, and aggregate reads.
+- Backend: Thin FastAPI API with Firebase-backed sync, manifests, and aggregate reads.
 
 ## Non-Negotiables
 

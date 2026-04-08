@@ -8,10 +8,15 @@ void main() {
   test('saveProfileLocalFirst stores profile and enqueues sync marker',
       () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
-    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
+    final SyncQueueRepository queue = SyncQueueRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
     final OnboardingRepository repository = OnboardingRepository(
       store: store,
       syncQueue: queue,
+      secretMaterialStore: secrets,
     );
 
     const OnboardingProfile profile = OnboardingProfile(

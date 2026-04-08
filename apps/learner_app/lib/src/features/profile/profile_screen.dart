@@ -61,6 +61,25 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
           ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    FallbackStrings.donationTitle(context),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(FallbackStrings.donationBody(context)),
+                  const SizedBox(height: 12),
+                  SelectableText(FallbackStrings.donationLink(context)),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -1,3 +1,3 @@
 # scripts
 
-Operational scripts for local dev, release prep, and manifest checks.
+Operational scripts for local development, release prep, Firebase checks, and manifest validation.

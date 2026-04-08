@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appName => 'Melingo';
+  String get appName => 'Melangua';
 
   @override
   String get homeTab => 'الرئيسية';
@@ -51,7 +51,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get settingsPrivacyDescription =>
-      'إعدادات افتراضية تضع الخصوصية أولا في melingo.';
+      'إعدادات افتراضية تضع الخصوصية أولا في Melangua.';
 
   @override
   String get diagnosticsOptIn => 'تفعيل التشخيص';
@@ -230,6 +230,40 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noMistakeTagsYet => 'لا توجد وسوم أخطاء بعد';
+
+  @override
+  String get privacyCardTitle => 'إعدادات الخصوصية الافتراضية';
+
+  @override
+  String get privacyCardBody =>
+      'يتم تشفير ملف الإعداد الأولي وقائمة المزامنة وقياسات التمرين محليا. تبقى التشخيصات والاحتفاظ بالصوت الخام متوقفة حتى يفعّلها المتعلم.';
+
+  @override
+  String get secureTransportTitle => 'نقل آمن';
+
+  @override
+  String get secureTransportBody =>
+      'يجب أن تستخدم الطلبات البعيدة الخاصة بالمانيفست والخلفية نقاط HTTPS قبل أن يتصل التطبيق.';
+
+  @override
+  String get licenseCardTitle => 'الترخيص والإفصاح';
+
+  @override
+  String get licenseCardBody =>
+      'المستودع عام حاليا. لم يتم اعتماد ترخيص نهائي للمشروع بعد، لذلك يعرض التطبيق هذه الحالة بصراحة.';
+
+  @override
+  String get donationTitle => 'ادعم Melangua';
+
+  @override
+  String get donationBody =>
+      'إذا كان التطبيق يساعدك على التعلم بشكل أسرع، يمكنك دعم التطوير. التبرعات لا تفتح الميزات الأساسية ولا تمنع أي مسار تعلم.';
+
+  @override
+  String get donationAction => 'اعرض رابط الدعم';
+
+  @override
+  String get donationLink => 'https://github.com/sponsors/WhiteHades';
 
   @override
   String get trendSummary =>

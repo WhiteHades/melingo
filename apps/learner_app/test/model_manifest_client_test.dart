@@ -10,8 +10,8 @@ void main() {
   test('fetch manifest parses version and bundles', () async {
     final MockClient mockClient = MockClient((http.Request request) async {
       expect(request.url.scheme, 'https');
-      expect(request.url.host, 'api.melingo.app');
-      expect(request.url.path, '/v1/models/manifest');
+      expect(request.url.host, 'melangua-efaz.web.app');
+      expect(request.url.path, '/model-manifest.json');
 
       return http.Response(
         jsonEncode(<String, dynamic>{
@@ -42,5 +42,14 @@ void main() {
     final ModelManifestClient client = ModelManifestClient(client: mockClient);
 
     expect(client.fetchManifest(), throwsException);
+  });
+
+  test('constructor rejects insecure manifest endpoints', () {
+    expect(
+      () => ModelManifestClient(
+        baseUri: Uri.http('localhost:5001'),
+      ),
+      throwsArgumentError,
+    );
   });
 }

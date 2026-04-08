@@ -1,92 +1,76 @@
-# Melingo
+<h1 align="center">Melangua</h1>
 
-[![Visibility](https://img.shields.io/badge/visibility-public-brightgreen)](https://github.com/WhiteHades/melingo)
-[![Status](https://img.shields.io/badge/status-active--development-blue)](https://github.com/WhiteHades/melingo)
-[![Offline First](https://img.shields.io/badge/offline--first-yes-success)](https://github.com/WhiteHades/melingo)
-[![Flutter](https://img.shields.io/badge/flutter-multi--platform-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
-[![FastAPI](https://img.shields.io/badge/backend-fastapi-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Supabase](https://img.shields.io/badge/database-supabase-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com)
-[![Issues](https://img.shields.io/github/issues/WhiteHades/melingo)](https://github.com/WhiteHades/melingo/issues)
-[![Stars](https://img.shields.io/github/stars/WhiteHades/melingo?style=social)](https://github.com/WhiteHades/melingo)
+<p align="center">Offline-first, speaking-first AI language tutor for Arabic and German.</p>
 
-Melingo is an offline-first, speaking-first AI language tutor built as a Flutter-first monorepo.
+<p align="center">
+  <a href="https://github.com/WhiteHades/melangua"><img src="https://img.shields.io/badge/status-active--development-blue" alt="Status active development"></a>
+  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/flutter-multi--platform-02569B?logo=flutter&logoColor=white" alt="Flutter multi platform"></a>
+  <a href="https://fastapi.tiangolo.com"><img src="https://img.shields.io/badge/backend-fastapi-009688?logo=fastapi&logoColor=white" alt="FastAPI backend"></a>
+  <a href="https://firebase.google.com"><img src="https://img.shields.io/badge/cloud-firebase-FFCA28?logo=firebase&logoColor=black" alt="Firebase cloud"></a>
+</p>
 
-## Project tags
+<p align="center">
+  <code>offline-first</code>
+  <code>speech-first</code>
+  <code>flutter</code>
+  <code>firebase</code>
+  <code>privacy-first</code>
+  <code>arabic</code>
+  <code>german</code>
+</p>
 
-`offline-first` `flutter` `dart` `fastapi` `python` `supabase` `asr` `tts` `language-learning` `privacy-first` `mobile` `desktop` `web`
+## What Melangua Is
 
-## What this repo is for
+Melangua is a language tutor built around one idea: if speaking is the goal, the speaking loop should be the product.
 
-- One shared product UI across Android, iOS, web, Windows, macOS, and Linux.
-- Privacy-first local inference and storage defaults.
-- Modular AI pipeline: ASR -> tutor -> TTS.
-- Event-first analytics with offline-first sync.
+That changes what matters. You care less about endless lesson trees and more about whether the app can hear you, respond quickly, explain your mistakes, and still work when the network is weak. Melangua is built around that constraint.
 
-## Tech stack
+## What It Does
 
-- Frontend: Flutter + Riverpod + GoRouter
-- Backend: FastAPI + Python
-- Data: Postgres/Supabase
-- Local security: encrypted local state + secure secret material store
-- AI path (target): Voxtral Mini ASR + Qwen tutor + Qwen3-TTS
+- Runs a speaking loop built from ASR, tutoring, and TTS.
+- Keeps learner state local first, then syncs when cloud services are available.
+- Supports Arabic and German with direction-aware UI and language-pack routing.
+- Uses one Flutter codebase across phone, tablet, desktop, and web.
+- Treats privacy as a default, not a premium setting.
 
-## Monorepo layout
+## Core Features
 
-```text
-melingo/
-  apps/
-    learner_app/
-  packages/
-    design_system/
-    domain/
-    data/
-    ai_bridge/
-    analytics/
-  backend/
-    api/
-    migrations/
-    workers/
-  infra/
-    ci/
-    scripts/
-  docs/
-  plans/
-```
+### Speaking Practice
 
-## Current implementation status
+- Start a turn, stop it, cancel it, or replay the tutor response.
+- Surface transcript confidence and latency so the voice loop is inspectable.
+- Keep interruption-safe turn taking instead of fragile record/playback state.
 
-- [x] Planning complete (PRD + phased plan + vertical-slice issues)
-- [x] Phase 1 baseline scaffold ([#2](https://github.com/WhiteHades/melingo/issues/2))
-- [x] Onboarding local-first writes ([#3](https://github.com/WhiteHades/melingo/issues/3))
-- [x] Model manager + integrity verification ([#4](https://github.com/WhiteHades/melingo/issues/4))
-- [ ] Audio engine + ASR first slice in progress ([#5](https://github.com/WhiteHades/melingo/issues/5))
+### Structured Tutor Feedback
 
-## Development
+- Show corrected text, short explanations, encouragement, and next prompts.
+- Normalize mistake tags by language pack so analytics stay useful.
+- Preserve the path for local inference without coupling the UI to one model stack.
 
-Root checks:
+### Progress And Review
 
-```bash
-/home/efaz/.volta/bin/npm run lint
-/home/efaz/.volta/bin/npm run typecheck
-/home/efaz/.volta/bin/npm test
-```
+- Aggregate event-derived stats such as latency, confidence, replays, and interruptions.
+- Expose top mistake tags and quality signals from real practice data.
+- Keep the architecture ready for deeper session review and history sync.
 
-Flutter app checks (from `apps/learner_app` once Flutter SDK is installed):
+### Privacy And Reliability
 
-```bash
-flutter pub get
-flutter analyze
-flutter test
-```
+- Encrypt sensitive local state with secure key storage.
+- Keep diagnostics opt-in.
+- Keep raw audio retention off by default.
+- Enforce secure remote endpoints before cloud calls are allowed.
 
-## Security baseline
+## Why It Is Different
 
-- TLS for all remote traffic.
-- Encrypted local storage for sensitive app data.
-- Model artifact integrity verification before activation.
-- Secrets loaded from environment or secure stores only.
+Most language apps are comfortable as long as you stay inside their happy path. Melangua is being built for the less convenient cases too: weak connectivity, cross-device use, language-specific UI, and a learner who wants the product to be clear about what it stores and why.
 
-## Notes
+## Platform Direction
 
-- Repository visibility: public.
-- License file is not set yet.
+Melangua is being built as a multi-platform Flutter app with Firebase-backed cloud services and a thin custom backend where it still earns its keep.
+
+## More Docs
+
+- Product architecture: `docs/architecture.md`
+- Product requirements: `docs/prd-melangua-offline-flutter-language-tutor.md`
+- Delivery plan: `plans/melangua-offline-flutter-language-tutor.md`
+- Development and setup: `docs/development.md`

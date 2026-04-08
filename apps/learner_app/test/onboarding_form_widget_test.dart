@@ -11,16 +11,22 @@ void main() {
   testWidgets('onboarding form shows validation message for empty name',
       (WidgetTester tester) async {
     final InMemorySettingsStore store = InMemorySettingsStore();
-    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
+    final SyncQueueRepository queue = SyncQueueRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
     final OnboardingRepository repository = OnboardingRepository(
       store: store,
       syncQueue: queue,
+      secretMaterialStore: secrets,
     );
 
     await tester.pumpWidget(
       ProviderScope(
         overrides: <Override>[
           settingsStoreProvider.overrideWithValue(store),
+          secretMaterialStoreProvider.overrideWithValue(secrets),
           syncQueueRepositoryProvider.overrideWithValue(queue),
           onboardingRepositoryProvider.overrideWithValue(repository),
         ],
@@ -39,16 +45,22 @@ void main() {
   testWidgets('onboarding form saves local profile and queues sync marker',
       (WidgetTester tester) async {
     final InMemorySettingsStore store = InMemorySettingsStore();
-    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final InMemorySecretMaterialStore secrets = InMemorySecretMaterialStore();
+    final SyncQueueRepository queue = SyncQueueRepository(
+      store: store,
+      secretMaterialStore: secrets,
+    );
     final OnboardingRepository repository = OnboardingRepository(
       store: store,
       syncQueue: queue,
+      secretMaterialStore: secrets,
     );
 
     await tester.pumpWidget(
       ProviderScope(
         overrides: <Override>[
           settingsStoreProvider.overrideWithValue(store),
+          secretMaterialStoreProvider.overrideWithValue(secrets),
           syncQueueRepositoryProvider.overrideWithValue(queue),
           onboardingRepositoryProvider.overrideWithValue(repository),
         ],

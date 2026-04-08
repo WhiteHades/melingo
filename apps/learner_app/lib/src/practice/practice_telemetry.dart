@@ -36,10 +36,15 @@ class PracticeTelemetryEvent {
 }
 
 class PracticeTelemetryRepository {
-  PracticeTelemetryRepository({required SettingsValueStore store})
-      : _store = store;
+  PracticeTelemetryRepository({
+    required SettingsValueStore store,
+    required SecretMaterialStore secretMaterialStore,
+  }) : _store = EncryptedSettingsValueStore(
+          inner: store,
+          secretMaterialStore: secretMaterialStore,
+        );
 
-  static const String _eventsKey = 'melingo_practice_telemetry_events_v1';
+  static const String _eventsKey = 'melangua_practice_telemetry_events_v1';
 
   final SettingsValueStore _store;
 
