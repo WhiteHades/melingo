@@ -38,8 +38,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Stats'), findsOneWidget);
+    expect(find.text('7d'), findsOneWidget);
+    expect(find.text('30d'), findsOneWidget);
+    expect(find.text('90d'), findsOneWidget);
+    expect(find.text('practice minutes'), findsOneWidget);
+    expect(find.text('streak'), findsOneWidget);
     expect(find.text('Sessions'), findsOneWidget);
     expect(find.text('Avg ASR latency'), findsOneWidget);
-    expect(find.text('Top mistake tags'), findsOneWidget);
+    expect(find.text('grammar tags'), findsOneWidget);
   });
 }
