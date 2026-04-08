@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../l10n/fallback_strings.dart';
 import '../../l10n/language_packs.dart';
@@ -87,6 +88,13 @@ class PracticeScreen extends ConsumerWidget {
                     : null,
                 icon: const Icon(Icons.replay),
                 label: Text(FallbackStrings.replayAction(context)),
+              ),
+              OutlinedButton.icon(
+                onPressed: () {
+                  context.push('/review');
+                },
+                icon: const Icon(Icons.history),
+                label: const Text('review'),
               ),
             ],
           ),

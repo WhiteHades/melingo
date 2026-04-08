@@ -10,6 +10,7 @@ import 'package:learner_app/src/onboarding/onboarding_repository.dart';
 import 'package:learner_app/src/onboarding/sync_queue.dart';
 import 'package:learner_app/src/practice/audio_turn_controller.dart';
 import 'package:learner_app/src/practice/practice_telemetry.dart';
+import 'package:learner_app/src/review/practice_review_repository.dart';
 import 'package:learner_app/src/state/settings_state.dart';
 
 class _FakeAiBridge implements AiBridgePlatform {
@@ -136,6 +137,13 @@ void main() {
     expect(events.first.type, 'asr_result');
     expect(events[1].type, 'tutor_result');
     expect(events[2].type, 'tts_result');
+
+    final PracticeReviewRepository reviewRepository =
+        container.read(practiceReviewRepositoryProvider);
+    final List<PracticeReviewTurn> reviewTurns =
+        await reviewRepository.readAll();
+    expect(reviewTurns.length, 1);
+    expect(reviewTurns.first.transcript, 'hello world');
   });
 
   test('replayAssistantTurn emits replay telemetry', () async {
