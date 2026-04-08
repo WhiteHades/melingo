@@ -20,9 +20,9 @@ void main() {
       ),
     );
 
-    expect(find.text('start'), findsOneWidget);
-    expect(find.text('no transcript yet'), findsOneWidget);
-    expect(find.text('replay'), findsOneWidget);
-    expect(find.text('stop speech'), findsOneWidget);
+    expect(find.text('Start'), findsOneWidget);
+    expect(find.text('No transcript yet'), findsOneWidget);
+    expect(find.text('Replay'), findsOneWidget);
+    expect(find.text('Stop speech'), findsOneWidget);
   });
 }

@@ -23,7 +23,9 @@ class ModelManagerScreen extends ConsumerWidget {
               const Spacer(),
               IconButton(
                 onPressed: () {
-                  ref.read(modelManagerControllerProvider.notifier).refreshManifest();
+                  ref
+                      .read(modelManagerControllerProvider.notifier)
+                      .refreshManifest();
                 },
                 icon: const Icon(Icons.refresh),
                 tooltip: 'refresh manifest',
@@ -54,7 +56,8 @@ class ModelManagerScreen extends ConsumerWidget {
                   const Text('model health'),
                   const SizedBox(height: 8),
                   Text('ready: ${state.health?.ready ?? false}'),
-                  Text('installed: ${state.health?.installedBundles.join(', ') ?? 'none'}'),
+                  Text(
+                      'installed: ${state.health?.installedBundles.join(', ') ?? 'none'}'),
                   Text('last check: ${state.health?.lastCheckedIso ?? 'n/a'}'),
                 ],
               ),
@@ -83,7 +86,7 @@ class ModelManagerScreen extends ConsumerWidget {
               Text('min ram: ${bundle.minRamMb} mb'),
               Text('languages: ${bundle.languages.join(', ')}'),
               Text('offline: ${bundle.offlineCapable}'),
-              Text('integrity: sha256 pinned'),
+              const Text('integrity: sha256 pinned'),
               const SizedBox(height: 8),
               Row(
                 children: <Widget>[

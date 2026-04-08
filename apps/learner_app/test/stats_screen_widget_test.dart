@@ -33,9 +33,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('stats'), findsOneWidget);
-    expect(find.text('sessions'), findsOneWidget);
-    expect(find.text('avg asr latency'), findsOneWidget);
-    expect(find.text('top mistake tags'), findsOneWidget);
+    expect(find.text('Stats'), findsOneWidget);
+    expect(find.text('Sessions'), findsOneWidget);
+    expect(find.text('Avg ASR latency'), findsOneWidget);
+    expect(find.text('Top mistake tags'), findsOneWidget);
   });
 }

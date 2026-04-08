@@ -18,8 +18,7 @@ class ModelInstallRepository {
     final List<dynamic> list = jsonDecode(raw) as List<dynamic>;
     return list
         .map(
-          (dynamic e) =>
-              ModelInstallState.fromMap(e as Map<String, dynamic>),
+          (dynamic e) => ModelInstallState.fromMap(e as Map<String, dynamic>),
         )
         .toList(growable: false);
   }

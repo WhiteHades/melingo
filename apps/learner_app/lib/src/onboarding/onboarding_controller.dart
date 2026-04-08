@@ -45,7 +45,8 @@ class OnboardingController extends StateNotifier<OnboardingState> {
     state = state.copyWith(isSaving: true, saveError: null);
     try {
       await _repository.saveProfileLocalFirst(profile);
-      state = state.copyWith(profile: profile, isSaving: false, saveError: null);
+      state =
+          state.copyWith(profile: profile, isSaving: false, saveError: null);
     } catch (error) {
       state = state.copyWith(isSaving: false, saveError: error.toString());
     }
@@ -68,6 +69,7 @@ final Provider<OnboardingRepository> onboardingRepositoryProvider =
 final StateNotifierProvider<OnboardingController, OnboardingState>
     onboardingControllerProvider =
     StateNotifierProvider<OnboardingController, OnboardingState>((Ref ref) {
-  final OnboardingRepository repository = ref.watch(onboardingRepositoryProvider);
+  final OnboardingRepository repository =
+      ref.watch(onboardingRepositoryProvider);
   return OnboardingController(repository);
 });

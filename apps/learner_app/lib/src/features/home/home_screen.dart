@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../forms/onboarding_form.dart';
+import '../../l10n/fallback_strings.dart';
 import '../../widgets/accessibility_banner.dart';
 import '../shared/placeholder_scaffold.dart';
 
@@ -9,18 +10,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            AccessibilityBanner(),
+            const AccessibilityBanner(),
             PlaceholderScaffold(
-              title: 'Home',
-              description:
-                  'Today\'s practice summary, streak, and quick start action will live here.',
+              title: FallbackStrings.homeTitle(context),
+              description: FallbackStrings.homeDescription(context),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(16),
               child: Card(
                 child: Padding(

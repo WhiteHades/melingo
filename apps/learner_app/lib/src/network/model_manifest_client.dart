@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 import '../models/model_manifest.dart' as manifest_model;
 
 class ModelManifestClient {
-  ModelManifestClient({http.Client? client}) : _client = client ?? http.Client();
+  ModelManifestClient({http.Client? client})
+      : _client = client ?? http.Client();
 
   final http.Client _client;
 
@@ -17,7 +18,8 @@ class ModelManifestClient {
       throw Exception('failed to load model manifest');
     }
 
-    final Map<String, dynamic> map = jsonDecode(response.body) as Map<String, dynamic>;
+    final Map<String, dynamic> map =
+        jsonDecode(response.body) as Map<String, dynamic>;
     return manifest_model.ModelManifest.fromMap(_normalizeManifest(map));
   }
 
@@ -42,7 +44,8 @@ class ModelManifestClient {
         'minRamMb': 3000,
         'languages': <String>['de', 'ar'],
         'offlineCapable': true,
-        'artifactSha256': '9e3fdf35883bcc2410a05188960b71240696d9c5424cdd79f93d904d8aec3272',
+        'artifactSha256':
+            '9e3fdf35883bcc2410a05188960b71240696d9c5424cdd79f93d904d8aec3272',
       };
     }
     if (id == 'quality') {
@@ -52,7 +55,8 @@ class ModelManifestClient {
         'minRamMb': 10000,
         'languages': <String>['de', 'ar'],
         'offlineCapable': true,
-        'artifactSha256': '6e1e12eb6127db8a08191aee77c622527d97f22279b62db185095130ac7560c6',
+        'artifactSha256':
+            '6e1e12eb6127db8a08191aee77c622527d97f22279b62db185095130ac7560c6',
       };
     }
     return const <String, dynamic>{
@@ -61,7 +65,8 @@ class ModelManifestClient {
       'minRamMb': 6000,
       'languages': <String>['de', 'ar'],
       'offlineCapable': true,
-      'artifactSha256': '64c54e9c1222a38e902558aaca2c4da085d39f3b5cbb099a3d31367a614f26d4',
+      'artifactSha256':
+          '64c54e9c1222a38e902558aaca2c4da085d39f3b5cbb099a3d31367a614f26d4',
     };
   }
 }

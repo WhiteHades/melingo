@@ -31,8 +31,9 @@ class ModelBundle {
       id: map['id'] as String,
       sizeMb: map['sizeMb'] as int,
       minRamMb: map['minRamMb'] as int,
-      languages:
-          (map['languages'] as List<dynamic>).map((dynamic e) => e as String).toList(growable: false),
+      languages: (map['languages'] as List<dynamic>)
+          .map((dynamic e) => e as String)
+          .toList(growable: false),
       offlineCapable: map['offlineCapable'] as bool,
       artifactSha256: map['artifactSha256'] as String,
     );

@@ -6,10 +6,12 @@ import 'package:learner_app/src/state/settings_state.dart';
 void main() {
   test('upsert updates same bundle and keeps one row', () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
-    final ModelInstallRepository repository = ModelInstallRepository(store: store);
+    final ModelInstallRepository repository =
+        ModelInstallRepository(store: store);
 
     await repository.upsert(
-      const ModelInstallState(bundleId: 'lite', status: 'downloading', progress: 0.2),
+      const ModelInstallState(
+          bundleId: 'lite', status: 'downloading', progress: 0.2),
     );
     await repository.upsert(
       const ModelInstallState(bundleId: 'lite', status: 'ready', progress: 1),

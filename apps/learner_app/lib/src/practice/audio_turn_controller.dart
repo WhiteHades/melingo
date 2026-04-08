@@ -3,8 +3,12 @@ import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../l10n/language_packs.dart';
 import '../model_manager/model_health_repository.dart';
 import '../native/ai_bridge_platform.dart';
+import '../onboarding/onboarding_controller.dart';
+import '../onboarding/onboarding_profile.dart';
+import '../onboarding/onboarding_repository.dart';
 import '../state/settings_state.dart';
 import 'practice_telemetry.dart';
 import 'tutor_turn_result.dart';
@@ -94,9 +98,11 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
     required AiBridgePlatform aiBridge,
     required PracticeTelemetryRepository telemetryRepository,
     required ModelHealthRepository modelHealthRepository,
+    required OnboardingRepository onboardingRepository,
   })  : _aiBridge = aiBridge,
         _telemetryRepository = telemetryRepository,
         _modelHealthRepository = modelHealthRepository,
+        _onboardingRepository = onboardingRepository,
         super(AudioTurnState.initial) {
     _refreshOfflineReadiness();
   }
@@ -104,6 +110,7 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
   final AiBridgePlatform _aiBridge;
   final PracticeTelemetryRepository _telemetryRepository;
   final ModelHealthRepository _modelHealthRepository;
+  final OnboardingRepository _onboardingRepository;
 
   List<int>? _currentPcm;
   List<int> _lastTtsBytes = <int>[];
@@ -257,8 +264,15 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
       final String tutorRaw = await _aiBridge.runTutor(transcript: transcript);
       tutorStopwatch.stop();
       final int tutorLatencyMs = tutorStopwatch.elapsedMilliseconds;
-      final TutorTurnResult tutor =
-          TutorTurnResult.fromRaw(transcript: transcript, raw: tutorRaw);
+      final OnboardingProfile? profile =
+          await _onboardingRepository.readProfile();
+      final LanguagePack languagePack =
+          resolveLanguagePack(profile?.languageCode);
+      final TutorTurnResult tutor = TutorTurnResult.fromRaw(
+        transcript: transcript,
+        raw: tutorRaw,
+        languagePack: languagePack,
+      );
 
       await _telemetryRepository.append(
         PracticeTelemetryEvent(
@@ -268,6 +282,8 @@ class AudioTurnController extends StateNotifier<AudioTurnState> {
           metrics: <String, dynamic>{
             'latencyMs': tutorLatencyMs,
             'mistakeTags': tutor.mistakeTags,
+            'languageCode': languagePack.languageCode,
+            'taxonomyVersion': languagePack.taxonomyVersion,
           },
         ),
       );
@@ -377,11 +393,14 @@ final StateNotifierProvider<AudioTurnController, AudioTurnState>
   final AiBridgePlatform aiBridge = ref.watch(aiBridgeProvider);
   final PracticeTelemetryRepository telemetry =
       ref.watch(practiceTelemetryRepositoryProvider);
+  final OnboardingRepository onboardingRepository =
+      ref.watch(onboardingRepositoryProvider);
   final SettingsValueStore store = ref.watch(settingsStoreProvider);
   final ModelHealthRepository health = ModelHealthRepository(store: store);
   return AudioTurnController(
     aiBridge: aiBridge,
     telemetryRepository: telemetry,
     modelHealthRepository: health,
+    onboardingRepository: onboardingRepository,
   );
 });

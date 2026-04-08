@@ -29,13 +29,15 @@ class PracticeTelemetryEvent {
       type: map['type'] as String,
       turnId: map['turnId'] as String,
       occurredAtIso: map['occurredAtIso'] as String,
-      metrics: Map<String, dynamic>.from(map['metrics'] as Map<String, dynamic>),
+      metrics:
+          Map<String, dynamic>.from(map['metrics'] as Map<String, dynamic>),
     );
   }
 }
 
 class PracticeTelemetryRepository {
-  PracticeTelemetryRepository({required SettingsValueStore store}) : _store = store;
+  PracticeTelemetryRepository({required SettingsValueStore store})
+      : _store = store;
 
   static const String _eventsKey = 'melingo_practice_telemetry_events_v1';
 
@@ -49,14 +51,19 @@ class PracticeTelemetryRepository {
 
     final List<dynamic> decoded = jsonDecode(raw) as List<dynamic>;
     return decoded
-        .map((dynamic row) => PracticeTelemetryEvent.fromMap(row as Map<String, dynamic>))
+        .map((dynamic row) =>
+            PracticeTelemetryEvent.fromMap(row as Map<String, dynamic>))
         .toList(growable: false);
   }
 
   Future<void> append(PracticeTelemetryEvent event) async {
     final List<PracticeTelemetryEvent> existing = await readAll();
-    final List<PracticeTelemetryEvent> next = <PracticeTelemetryEvent>[...existing, event];
-    final String encoded = jsonEncode(next.map((e) => e.toMap()).toList(growable: false));
+    final List<PracticeTelemetryEvent> next = <PracticeTelemetryEvent>[
+      ...existing,
+      event
+    ];
+    final String encoded =
+        jsonEncode(next.map((e) => e.toMap()).toList(growable: false));
     await _store.writeString(_eventsKey, encoded);
   }
 }

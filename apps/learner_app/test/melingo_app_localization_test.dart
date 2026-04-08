@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:learner_app/src/features/profile/profile_screen.dart';
+import 'package:learner_app/main.dart';
 import 'package:learner_app/src/onboarding/onboarding_controller.dart';
 import 'package:learner_app/src/onboarding/onboarding_profile.dart';
 import 'package:learner_app/src/onboarding/onboarding_repository.dart';
@@ -9,7 +9,7 @@ import 'package:learner_app/src/onboarding/sync_queue.dart';
 import 'package:learner_app/src/state/settings_state.dart';
 
 void main() {
-  testWidgets('profile screen shows onboarding values when available',
+  testWidgets('app switches to RTL when arabic pack is selected',
       (WidgetTester tester) async {
     final InMemorySettingsStore store = InMemorySettingsStore();
     final SyncQueueRepository queue = SyncQueueRepository(store: store);
@@ -21,9 +21,9 @@ void main() {
     await repository.saveProfileLocalFirst(
       const OnboardingProfile(
         displayName: 'efaz',
-        languageCode: 'de',
-        level: 'a2',
-        weeklyGoalMinutes: 120,
+        languageCode: 'ar',
+        level: 'a1',
+        weeklyGoalMinutes: 60,
       ),
     );
 
@@ -34,14 +34,14 @@ void main() {
           syncQueueRepositoryProvider.overrideWithValue(queue),
           onboardingRepositoryProvider.overrideWithValue(repository),
         ],
-        child: const MaterialApp(home: ProfileScreen()),
+        child: const MelingoApp(),
       ),
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Name: efaz'), findsOneWidget);
-    expect(find.text('Language: Deutsch'), findsOneWidget);
-    expect(find.text('Level: a2'), findsOneWidget);
-    expect(find.text('Content version: de.v1'), findsOneWidget);
+    expect(find.text('الرئيسية'), findsWidgets);
+
+    final BuildContext context = tester.element(find.byType(Scaffold).first);
+    expect(Directionality.of(context), TextDirection.rtl);
   });
 }

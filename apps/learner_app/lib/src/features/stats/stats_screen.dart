@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/fallback_strings.dart';
+import '../../l10n/language_packs.dart';
+import '../../onboarding/onboarding_controller.dart';
 import '../../practice/practice_telemetry.dart';
 import '../../state/settings_state.dart';
 import 'stats_aggregator.dart';
@@ -11,6 +14,9 @@ class StatsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final SettingsValueStore store = ref.watch(settingsStoreProvider);
+    final OnboardingState onboarding = ref.watch(onboardingControllerProvider);
+    final LanguagePack languagePack =
+        resolveLanguagePack(onboarding.profile?.languageCode);
     final PracticeTelemetryRepository repository =
         PracticeTelemetryRepository(store: store);
 
@@ -26,27 +32,37 @@ class StatsScreen extends ConsumerWidget {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: <Widget>[
-              Text('stats', style: Theme.of(context).textTheme.headlineSmall),
+              Text(
+                FallbackStrings.statsTitle(context),
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${FallbackStrings.activeLanguagePack(context)}: ${languagePack.displayName} (${languagePack.taxonomyVersion})',
+              ),
               const SizedBox(height: 12),
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
                 children: <Widget>[
-                  _kpiCard(
-                      context, 'sessions', summary.sessionCount.toString()),
-                  _kpiCard(context, 'avg asr latency',
+                  _kpiCard(context, FallbackStrings.sessionsLabel(context),
+                      summary.sessionCount.toString()),
+                  _kpiCard(context, FallbackStrings.avgAsrLatencyLabel(context),
                       '${summary.avgAsrLatencyMs} ms'),
-                  _kpiCard(context, 'avg tutor latency',
+                  _kpiCard(
+                      context,
+                      FallbackStrings.avgTutorLatencyLabel(context),
                       '${summary.avgTutorLatencyMs} ms'),
-                  _kpiCard(context, 'avg tts latency',
+                  _kpiCard(context, FallbackStrings.avgTtsLatencyLabel(context),
                       '${summary.avgTtsLatencyMs} ms'),
                   _kpiCard(
                     context,
-                    'avg confidence',
+                    FallbackStrings.avgConfidenceLabel(context),
                     summary.avgAsrConfidence.toStringAsFixed(2),
                   ),
-                  _kpiCard(context, 'replays', summary.replayCount.toString()),
-                  _kpiCard(context, 'interruptions',
+                  _kpiCard(context, FallbackStrings.replaysLabel(context),
+                      summary.replayCount.toString()),
+                  _kpiCard(context, FallbackStrings.interruptionsLabel(context),
                       summary.interruptionCount.toString()),
                 ],
               ),
@@ -57,11 +73,13 @@ class StatsScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('top mistake tags',
-                          style: Theme.of(context).textTheme.titleMedium),
+                      Text(
+                        FallbackStrings.topMistakeTags(context),
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                       const SizedBox(height: 8),
                       if (summary.topMistakeTags.isEmpty)
-                        const Text('no mistake tags yet')
+                        Text(FallbackStrings.noMistakeTagsYet(context))
                       else
                         ...summary.topMistakeTags.map(
                           (String tag) => Padding(
@@ -75,7 +93,7 @@ class StatsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'trend windows (7/30/90) and per-language topic breakdowns will be added in next slice.',
+                FallbackStrings.trendSummary(context),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

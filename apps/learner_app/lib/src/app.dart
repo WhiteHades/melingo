@@ -8,23 +8,40 @@ import 'features/practice/practice_screen.dart';
 import 'features/profile/profile_screen.dart';
 import 'features/settings/settings_screen.dart';
 import 'features/stats/stats_screen.dart';
+import 'l10n/fallback_strings.dart';
 import 'platform/window_size.dart';
 import 'theme/tokens.dart';
 
 enum AppTab {
-  home('/home', 'Home', Icons.home_outlined, Icons.home),
-  practice('/practice', 'Practice', Icons.mic_none_outlined, Icons.mic),
-  stats('/stats', 'Stats', Icons.bar_chart_outlined, Icons.bar_chart),
-  library('/library', 'Library', Icons.menu_book_outlined, Icons.menu_book),
-  profile('/profile', 'Profile', Icons.person_outline, Icons.person),
-  settings('/settings', 'Settings', Icons.settings_outlined, Icons.settings);
+  home('/home', Icons.home_outlined, Icons.home),
+  practice('/practice', Icons.mic_none_outlined, Icons.mic),
+  stats('/stats', Icons.bar_chart_outlined, Icons.bar_chart),
+  library('/library', Icons.menu_book_outlined, Icons.menu_book),
+  profile('/profile', Icons.person_outline, Icons.person),
+  settings('/settings', Icons.settings_outlined, Icons.settings);
 
-  const AppTab(this.path, this.label, this.icon, this.selectedIcon);
+  const AppTab(this.path, this.icon, this.selectedIcon);
 
   final String path;
-  final String label;
   final IconData icon;
   final IconData selectedIcon;
+
+  String label(BuildContext context) {
+    switch (this) {
+      case AppTab.home:
+        return FallbackStrings.homeTab(context);
+      case AppTab.practice:
+        return FallbackStrings.practiceTab(context);
+      case AppTab.stats:
+        return FallbackStrings.statsTab(context);
+      case AppTab.library:
+        return FallbackStrings.libraryTab(context);
+      case AppTab.profile:
+        return FallbackStrings.profileTab(context);
+      case AppTab.settings:
+        return FallbackStrings.settingsTab(context);
+    }
+  }
 }
 
 GoRouter get appRouter => _router;
@@ -121,7 +138,7 @@ class AdaptiveShell extends StatelessWidget {
                     (AppTab tab) => NavigationRailDestination(
                       icon: Icon(tab.icon),
                       selectedIcon: Icon(tab.selectedIcon),
-                      label: Text(tab.label),
+                      label: Text(tab.label(context)),
                     ),
                   )
                   .toList(growable: false),
@@ -146,14 +163,14 @@ class AdaptiveShell extends StatelessWidget {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          'Melingo',
+                          FallbackStrings.appName(context),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const Spacer(),
                         FilledButton.tonalIcon(
                           onPressed: () {},
                           icon: const Icon(Icons.play_arrow),
-                          label: const Text('Start Practice'),
+                          label: Text(FallbackStrings.startPractice(context)),
                         ),
                       ],
                     ),
@@ -180,7 +197,7 @@ class AdaptiveShell extends StatelessWidget {
                     (AppTab tab) => NavigationRailDestination(
                       icon: Icon(tab.icon),
                       selectedIcon: Icon(tab.selectedIcon),
-                      label: Text(tab.label),
+                      label: Text(tab.label(context)),
                     ),
                   )
                   .toList(growable: false),
@@ -202,7 +219,7 @@ class AdaptiveShell extends StatelessWidget {
               (AppTab tab) => NavigationDestination(
                 icon: Icon(tab.icon),
                 selectedIcon: Icon(tab.selectedIcon),
-                label: tab.label,
+                label: tab.label(context),
               ),
             )
             .toList(growable: false),

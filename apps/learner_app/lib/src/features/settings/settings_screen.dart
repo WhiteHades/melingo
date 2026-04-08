@@ -12,61 +12,63 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppSettings settings = ref.watch(settingsProvider);
 
-    return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: <Widget>[
-          Text(
-            FallbackStrings.settingsTitle(context),
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Privacy-first defaults for melingo.',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 20),
-          SwitchListTile(
-            value: settings.diagnosticsOptIn,
-            title: Text(FallbackStrings.diagnosticsOptIn(context)),
-            subtitle: const Text(
-              'Off by default. Enables anonymous crash/performance diagnostics.',
+    return Scaffold(
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: <Widget>[
+            Text(
+              FallbackStrings.settingsTitle(context),
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
-            onChanged: (bool value) {
-              ref.read(settingsProvider.notifier).setDiagnosticsOptIn(value);
-            },
-          ),
-          SwitchListTile(
-            value: settings.storeRawAudioLocally,
-            title: Text(FallbackStrings.storeRawAudio(context)),
-            subtitle: const Text(
-              'Keep disabled unless user explicitly enables session audio retention.',
+            const SizedBox(height: 8),
+            Text(
+              FallbackStrings.settingsPrivacyDescription(context),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-            onChanged: (bool value) {
-              ref
-                  .read(settingsProvider.notifier)
-                  .setStoreRawAudioLocally(value);
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.shield_outlined),
-            title: Text(FallbackStrings.encryptionStatus(context)),
-            subtitle: Text(
-              settings.encryptionEnabled
-                  ? FallbackStrings.encryptionEnabled(context)
-                  : FallbackStrings.encryptionDisabled(context),
+            const SizedBox(height: 20),
+            SwitchListTile(
+              value: settings.diagnosticsOptIn,
+              title: Text(FallbackStrings.diagnosticsOptIn(context)),
+              subtitle: Text(
+                FallbackStrings.diagnosticsDescription(context),
+              ),
+              onChanged: (bool value) {
+                ref.read(settingsProvider.notifier).setDiagnosticsOptIn(value);
+              },
             ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.memory_outlined),
-            title: const Text('model manager'),
-            subtitle: const Text('bundle setup and model health'),
-            onTap: () {
-              context.push('/models');
-            },
-          ),
-        ],
+            SwitchListTile(
+              value: settings.storeRawAudioLocally,
+              title: Text(FallbackStrings.storeRawAudio(context)),
+              subtitle: Text(
+                FallbackStrings.storeRawAudioDescription(context),
+              ),
+              onChanged: (bool value) {
+                ref
+                    .read(settingsProvider.notifier)
+                    .setStoreRawAudioLocally(value);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.shield_outlined),
+              title: Text(FallbackStrings.encryptionStatus(context)),
+              subtitle: Text(
+                settings.encryptionEnabled
+                    ? FallbackStrings.encryptionEnabled(context)
+                    : FallbackStrings.encryptionDisabled(context),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.memory_outlined),
+              title: Text(FallbackStrings.modelManagerTitle(context)),
+              subtitle: Text(FallbackStrings.modelManagerDescription(context)),
+              onTap: () {
+                context.push('/models');
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:learner_app/src/l10n/language_packs.dart';
 import 'package:learner_app/src/practice/tutor_turn_result.dart';
 
 void main() {
@@ -30,5 +31,19 @@ void main() {
     expect(result.mistakeTags, <String>['grammar:general']);
     expect(
         result.assistantResponseText, 'Try again with clearer pronunciation.');
+  });
+
+  test('normalizes tags against selected language taxonomy', () {
+    const String raw =
+        '{"correctedText":"ana adhhab","explanation":"Adjusted case ending.","encouragement":"Good effort.","nextPrompt":"Try again.","mistakeTags":["grammar:agreement","script:hamza"],"responseText":"Try again."}';
+
+    final TutorTurnResult result = TutorTurnResult.fromRaw(
+      transcript: 'ana adhhab',
+      raw: raw,
+      languagePack: arabicLanguagePack,
+    );
+
+    expect(
+        result.mistakeTags, const <String>['grammar:general', 'script:hamza']);
   });
 }

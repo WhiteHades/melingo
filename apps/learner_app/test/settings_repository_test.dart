@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:learner_app/src/state/settings_state.dart';
+
 void main() {
   group('settings repository', () {
     test('reads defaults when storage is empty', () async {

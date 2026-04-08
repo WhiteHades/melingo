@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/semantics.dart';
 
+import 'l10n/app_localizations.dart';
 import 'src/app.dart';
+import 'src/l10n/language_packs.dart';
+import 'src/onboarding/onboarding_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,19 +16,20 @@ void main() {
   runApp(const ProviderScope(child: MelingoApp()));
 }
 
-class MelingoApp extends StatelessWidget {
+class MelingoApp extends ConsumerWidget {
   const MelingoApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final OnboardingState onboarding = ref.watch(onboardingControllerProvider);
+    final LanguagePack languagePack =
+        resolveLanguagePack(onboarding.profile?.languageCode);
+
     return MaterialApp.router(
       title: 'Melingo',
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('en'), Locale('de'), Locale('ar')],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: languagePack.locale,
       theme: melingoLightTheme(),
       darkTheme: melingoDarkTheme(),
       themeMode: ThemeMode.system,

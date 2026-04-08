@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/fallback_strings.dart';
+import '../../l10n/language_packs.dart';
+import '../../onboarding/onboarding_controller.dart';
 import '../../practice/audio_turn_controller.dart';
 
 class PracticeScreen extends ConsumerWidget {
@@ -11,15 +14,27 @@ class PracticeScreen extends ConsumerWidget {
     final AudioTurnState state = ref.watch(audioTurnControllerProvider);
     final AudioTurnController controller =
         ref.read(audioTurnControllerProvider.notifier);
+    final OnboardingState onboarding = ref.watch(onboardingControllerProvider);
+    final LanguagePack languagePack =
+        resolveLanguagePack(onboarding.profile?.languageCode);
 
     return SafeArea(
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: <Widget>[
-          Text('practice', style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            FallbackStrings.practiceTitle(context),
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           const SizedBox(height: 8),
-          Text('phase: ${state.phase.name}'),
-          Text('offline ready: ${state.canRunOffline}'),
+          Text(
+              '${FallbackStrings.practicePhase(context)}: ${state.phase.name}'),
+          Text(
+            '${FallbackStrings.practiceOfflineReady(context)}: ${state.canRunOffline}',
+          ),
+          Text(
+            '${FallbackStrings.activeLanguagePack(context)}: ${languagePack.displayName} (${languagePack.contentVersion})',
+          ),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -34,7 +49,7 @@ class PracticeScreen extends ConsumerWidget {
                         controller.startRecording();
                       },
                 icon: const Icon(Icons.mic),
-                label: const Text('start'),
+                label: Text(FallbackStrings.startAction(context)),
               ),
               FilledButton.tonalIcon(
                 onPressed: state.phase == AudioTurnPhase.recording
@@ -43,7 +58,7 @@ class PracticeScreen extends ConsumerWidget {
                       }
                     : null,
                 icon: const Icon(Icons.stop),
-                label: const Text('stop'),
+                label: Text(FallbackStrings.stopAction(context)),
               ),
               OutlinedButton.icon(
                 onPressed: state.phase == AudioTurnPhase.recording
@@ -52,7 +67,7 @@ class PracticeScreen extends ConsumerWidget {
                       }
                     : null,
                 icon: const Icon(Icons.close),
-                label: const Text('cancel'),
+                label: Text(FallbackStrings.cancelAction(context)),
               ),
               OutlinedButton.icon(
                 onPressed: state.phase == AudioTurnPhase.speaking
@@ -61,7 +76,7 @@ class PracticeScreen extends ConsumerWidget {
                       }
                     : null,
                 icon: const Icon(Icons.volume_off),
-                label: const Text('stop speech'),
+                label: Text(FallbackStrings.stopSpeechAction(context)),
               ),
               OutlinedButton.icon(
                 onPressed: state.tutor != null &&
@@ -71,7 +86,7 @@ class PracticeScreen extends ConsumerWidget {
                       }
                     : null,
                 icon: const Icon(Icons.replay),
-                label: const Text('replay'),
+                label: Text(FallbackStrings.replayAction(context)),
               ),
             ],
           ),
@@ -82,41 +97,62 @@ class PracticeScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('transcript',
-                      style: Theme.of(context).textTheme.titleMedium),
+                  Text(
+                    FallbackStrings.transcriptTitle(context),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   const SizedBox(height: 8),
-                  Text(state.transcript.isEmpty
-                      ? 'no transcript yet'
-                      : state.transcript),
+                  Text(
+                    state.transcript.isEmpty
+                        ? FallbackStrings.noTranscriptYet(context)
+                        : state.transcript,
+                  ),
                   const SizedBox(height: 8),
-                  Text('confidence: ${state.confidence.toStringAsFixed(2)}'),
-                  Text('latency: ${state.latencyMs} ms'),
+                  Text(
+                    '${FallbackStrings.confidenceLabel(context)}: ${state.confidence.toStringAsFixed(2)}',
+                  ),
+                  Text(
+                    '${FallbackStrings.latencyLabel(context)}: ${state.latencyMs} ms',
+                  ),
                   if (state.tutor != null) ...<Widget>[
                     const SizedBox(height: 12),
-                    Text('correction',
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      FallbackStrings.correctionTitle(context),
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 4),
                     Text(state.tutor!.correctedText),
                     const SizedBox(height: 8),
-                    Text('explanation',
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      FallbackStrings.explanationTitle(context),
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 4),
                     Text(state.tutor!.explanation),
                     const SizedBox(height: 8),
-                    Text('assistant',
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      FallbackStrings.assistantTitle(context),
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 4),
                     Text(state.tutor!.assistantResponseText),
                     const SizedBox(height: 8),
-                    Text('next prompt',
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      FallbackStrings.nextPromptTitle(context),
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(height: 4),
                     Text(state.tutor!.nextPrompt),
                     const SizedBox(height: 8),
                     Text(
-                        'mistake tags: ${state.tutor!.mistakeTags.join(', ')}'),
-                    Text('tutor latency: ${state.tutorLatencyMs} ms'),
-                    Text('tts latency: ${state.ttsLatencyMs} ms'),
+                      '${FallbackStrings.mistakeTagsLabel(context)}: ${state.tutor!.mistakeTags.join(', ')}',
+                    ),
+                    Text(
+                      '${FallbackStrings.tutorLatencyLabel(context)}: ${state.tutorLatencyMs} ms',
+                    ),
+                    Text(
+                      '${FallbackStrings.ttsLatencyLabel(context)}: ${state.ttsLatencyMs} ms',
+                    ),
                   ],
                   if (state.error != null) ...<Widget>[
                     const SizedBox(height: 8),

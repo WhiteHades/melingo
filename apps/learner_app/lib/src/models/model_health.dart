@@ -20,9 +20,10 @@ class ModelHealth {
   static ModelHealth fromMap(Map<String, dynamic> map) {
     return ModelHealth(
       ready: map['ready'] as bool? ?? false,
-      installedBundles: (map['installedBundles'] as List<dynamic>? ?? <dynamic>[])
-          .map((dynamic e) => e as String)
-          .toList(growable: false),
+      installedBundles:
+          (map['installedBundles'] as List<dynamic>? ?? <dynamic>[])
+              .map((dynamic e) => e as String)
+              .toList(growable: false),
       lastCheckedIso: map['lastCheckedIso'] as String? ?? '',
     );
   }

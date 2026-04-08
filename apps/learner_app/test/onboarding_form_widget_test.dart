@@ -30,10 +30,10 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text('save onboarding'));
+    await tester.tap(find.text('Save onboarding'));
     await tester.pump();
 
-    expect(find.text('name is required'), findsOneWidget);
+    expect(find.text('Name is required'), findsOneWidget);
   });
 
   testWidgets('onboarding form saves local profile and queues sync marker',
@@ -59,7 +59,7 @@ void main() {
     );
 
     await tester.enterText(find.byType(TextFormField).first, 'efaz');
-    await tester.tap(find.text('save onboarding'));
+    await tester.tap(find.text('Save onboarding'));
     await tester.pumpAndSettle();
 
     final List<SyncQueueItem> queued = await queue.readAll();

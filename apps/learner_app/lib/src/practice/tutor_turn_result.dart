@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../l10n/language_packs.dart';
+
 class TutorTurnResult {
   const TutorTurnResult({
     required this.correctedText,
@@ -20,9 +22,12 @@ class TutorTurnResult {
   static TutorTurnResult fromRaw({
     required String transcript,
     required String raw,
+    LanguagePack? languagePack,
   }) {
+    final LanguagePack pack = languagePack ?? germanLanguagePack;
+
     if (raw.isEmpty) {
-      return fallback(transcript: transcript);
+      return fallback(transcript: transcript, languagePack: pack);
     }
 
     try {
@@ -31,6 +36,7 @@ class TutorTurnResult {
         return fallback(
           transcript: transcript,
           assistantResponseText: raw,
+          languagePack: pack,
         );
       }
 
@@ -45,7 +51,10 @@ class TutorTurnResult {
             'I adjusted your sentence to be more natural and clear.',
         encouragement: encouragement,
         nextPrompt: nextPrompt,
-        mistakeTags: _stringList(decoded['mistakeTags']),
+        mistakeTags: normalizeMistakeTags(
+          languagePack: pack,
+          rawTags: _stringList(decoded['mistakeTags']),
+        ),
         assistantResponseText: _stringValue(decoded['responseText']) ??
             '$encouragement $nextPrompt',
       );
@@ -53,6 +62,7 @@ class TutorTurnResult {
       return fallback(
         transcript: transcript,
         assistantResponseText: raw,
+        languagePack: pack,
       );
     }
   }
@@ -60,15 +70,20 @@ class TutorTurnResult {
   static TutorTurnResult fallback({
     required String transcript,
     String? assistantResponseText,
+    LanguagePack? languagePack,
   }) {
+    final LanguagePack pack = languagePack ?? germanLanguagePack;
     final String encouragement = 'Good effort.';
-    final String nextPrompt = 'Try another sentence with the same idea.';
+    final String nextPrompt = pack.defaultNextPrompt;
     return TutorTurnResult(
       correctedText: transcript,
       explanation: 'I adjusted your sentence to be more natural and clear.',
       encouragement: encouragement,
       nextPrompt: nextPrompt,
-      mistakeTags: const <String>['grammar:general'],
+      mistakeTags: normalizeMistakeTags(
+        languagePack: pack,
+        rawTags: const <String>['grammar:general'],
+      ),
       assistantResponseText:
           assistantResponseText ?? '$encouragement $nextPrompt',
     );
@@ -88,6 +103,6 @@ class TutorTurnResult {
           .where((String entry) => entry.isNotEmpty)
           .toList(growable: false);
     }
-    return const <String>['grammar:general'];
+    return const <String>[];
   }
 }

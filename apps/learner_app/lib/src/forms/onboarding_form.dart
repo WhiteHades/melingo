@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../l10n/fallback_strings.dart';
+import '../l10n/language_packs.dart';
 import '../onboarding/onboarding_controller.dart';
 import '../onboarding/onboarding_profile.dart';
 
@@ -14,6 +16,7 @@ class OnboardingForm extends ConsumerStatefulWidget {
 class _OnboardingFormState extends ConsumerState<OnboardingForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
+  bool _didSeedFromProfile = false;
   String _selectedLanguage = 'de';
   String _selectedLevel = 'a1';
   double _weeklyGoal = 60;
@@ -28,6 +31,14 @@ class _OnboardingFormState extends ConsumerState<OnboardingForm> {
   Widget build(BuildContext context) {
     final OnboardingState state = ref.watch(onboardingControllerProvider);
 
+    if (!_didSeedFromProfile && state.profile != null) {
+      _nameController.text = state.profile!.displayName;
+      _selectedLanguage = state.profile!.languageCode;
+      _selectedLevel = state.profile!.level;
+      _weeklyGoal = state.profile!.weeklyGoalMinutes.toDouble();
+      _didSeedFromProfile = true;
+    }
+
     return Form(
       key: _formKey,
       child: Column(
@@ -35,27 +46,29 @@ class _OnboardingFormState extends ConsumerState<OnboardingForm> {
         children: <Widget>[
           TextFormField(
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'display name',
-              hintText: 'enter your name',
+            decoration: InputDecoration(
+              labelText: FallbackStrings.onboardingDisplayNameLabel(context),
+              hintText: FallbackStrings.onboardingDisplayNameHint(context),
             ),
             validator: (String? value) {
               if (value == null || value.trim().isEmpty) {
-                return 'name is required';
+                return FallbackStrings.onboardingNameRequired(context);
               }
               if (value.trim().length < 2) {
-                return 'name must be at least 2 chars';
+                return FallbackStrings.onboardingNameTooShort(context);
               }
               return null;
             },
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            value: _selectedLanguage,
-            items: const <DropdownMenuItem<String>>[
-              DropdownMenuItem(value: 'de', child: Text('german')),
-              DropdownMenuItem(value: 'ar', child: Text('arabic')),
-            ],
+            initialValue: _selectedLanguage,
+            items: supportedLanguagePacks.map((LanguagePack pack) {
+              return DropdownMenuItem<String>(
+                value: pack.languageCode,
+                child: Text(pack.displayName),
+              );
+            }).toList(growable: false),
             onChanged: (String? value) {
               if (value != null) {
                 setState(() {
@@ -63,11 +76,13 @@ class _OnboardingFormState extends ConsumerState<OnboardingForm> {
                 });
               }
             },
-            decoration: const InputDecoration(labelText: 'target language'),
+            decoration: InputDecoration(
+              labelText: FallbackStrings.onboardingTargetLanguage(context),
+            ),
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
-            value: _selectedLevel,
+            initialValue: _selectedLevel,
             items: const <DropdownMenuItem<String>>[
               DropdownMenuItem(value: 'a1', child: Text('a1')),
               DropdownMenuItem(value: 'a2', child: Text('a2')),
@@ -80,10 +95,14 @@ class _OnboardingFormState extends ConsumerState<OnboardingForm> {
                 });
               }
             },
-            decoration: const InputDecoration(labelText: 'level'),
+            decoration: InputDecoration(
+              labelText: FallbackStrings.onboardingLevel(context),
+            ),
           ),
           const SizedBox(height: 12),
-          Text('weekly goal minutes: ${_weeklyGoal.toInt()}'),
+          Text(
+            '${FallbackStrings.onboardingWeeklyGoalMinutes(context)}: ${_weeklyGoal.toInt()}',
+          ),
           Slider(
             min: 30,
             max: 300,
@@ -101,6 +120,10 @@ class _OnboardingFormState extends ConsumerState<OnboardingForm> {
             onPressed: state.isSaving
                 ? null
                 : () async {
+                    final ScaffoldMessengerState messenger =
+                        ScaffoldMessenger.of(context);
+                    final String savedMessage =
+                        FallbackStrings.onboardingSaved(context);
                     if (_formKey.currentState?.validate() ?? false) {
                       final OnboardingProfile profile = OnboardingProfile(
                         displayName: _nameController.text.trim(),
@@ -114,16 +137,18 @@ class _OnboardingFormState extends ConsumerState<OnboardingForm> {
                       if (!mounted) {
                         return;
                       }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'onboarding saved locally and queued for sync',
-                          ),
+                      messenger.showSnackBar(
+                        SnackBar(
+                          content: Text(savedMessage),
                         ),
                       );
                     }
                   },
-            child: Text(state.isSaving ? 'saving...' : 'save onboarding'),
+            child: Text(
+              state.isSaving
+                  ? FallbackStrings.onboardingSaving(context)
+                  : FallbackStrings.onboardingSave(context),
+            ),
           ),
           if (state.saveError != null) ...<Widget>[
             const SizedBox(height: 8),
@@ -140,7 +165,7 @@ class _OnboardingFormState extends ConsumerState<OnboardingForm> {
           ],
           if (state.profile == null) ...<Widget>[
             const SizedBox(height: 8),
-            const Text('no saved onboarding profile yet'),
+            Text(FallbackStrings.onboardingNoProfileYet(context)),
           ],
         ],
       ),

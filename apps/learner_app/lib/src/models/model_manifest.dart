@@ -10,7 +10,8 @@ class ModelManifest {
   final List<ModelBundle> bundles;
 
   static ModelManifest fromMap(Map<String, dynamic> map) {
-    final List<dynamic> rawBundles = map['bundles'] as List<dynamic>? ?? <dynamic>[];
+    final List<dynamic> rawBundles =
+        map['bundles'] as List<dynamic>? ?? <dynamic>[];
     return ModelManifest(
       version: map['version'] as String? ?? 'unknown',
       bundles: rawBundles

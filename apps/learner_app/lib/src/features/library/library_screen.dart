@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/fallback_strings.dart';
 import '../shared/placeholder_scaffold.dart';
 
 class LibraryScreen extends StatelessWidget {
@@ -7,10 +8,9 @@ class LibraryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PlaceholderScaffold(
-      title: 'Library',
-      description:
-          'Scenario prompts, drills, grammar notes, and vocabulary decks will appear here.',
+    return PlaceholderScaffold(
+      title: FallbackStrings.libraryTitle(context),
+      description: FallbackStrings.libraryDescription(context),
     );
   }
 }

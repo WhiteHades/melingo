@@ -1,8 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:learner_app/src/l10n/language_packs.dart';
 import 'package:learner_app/src/models/model_health.dart';
 import 'package:learner_app/src/model_manager/model_health_repository.dart';
 import 'package:learner_app/src/native/ai_bridge_platform.dart';
+import 'package:learner_app/src/onboarding/onboarding_controller.dart';
+import 'package:learner_app/src/onboarding/onboarding_profile.dart';
+import 'package:learner_app/src/onboarding/onboarding_repository.dart';
+import 'package:learner_app/src/onboarding/sync_queue.dart';
 import 'package:learner_app/src/practice/audio_turn_controller.dart';
 import 'package:learner_app/src/practice/practice_telemetry.dart';
 import 'package:learner_app/src/state/settings_state.dart';
@@ -83,6 +88,14 @@ void main() {
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
         aiBridgeProvider.overrideWithValue(_FakeAiBridge()),
+        syncQueueRepositoryProvider
+            .overrideWithValue(SyncQueueRepository(store: store)),
+        onboardingRepositoryProvider.overrideWithValue(
+          OnboardingRepository(
+            store: store,
+            syncQueue: SyncQueueRepository(store: store),
+          ),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -118,10 +131,17 @@ void main() {
   test('replayAssistantTurn emits replay telemetry', () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
     final _FakeAiBridge fakeBridge = _FakeAiBridge();
+    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final OnboardingRepository onboardingRepository = OnboardingRepository(
+      store: store,
+      syncQueue: queue,
+    );
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
         aiBridgeProvider.overrideWithValue(fakeBridge),
+        syncQueueRepositoryProvider.overrideWithValue(queue),
+        onboardingRepositoryProvider.overrideWithValue(onboardingRepository),
       ],
     );
     addTearDown(container.dispose);
@@ -145,11 +165,18 @@ void main() {
       () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
     final _FakeAiBridge fakeBridge = _FakeAiBridge();
+    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final OnboardingRepository onboardingRepository = OnboardingRepository(
+      store: store,
+      syncQueue: queue,
+    );
 
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
         aiBridgeProvider.overrideWithValue(fakeBridge),
+        syncQueueRepositoryProvider.overrideWithValue(queue),
+        onboardingRepositoryProvider.overrideWithValue(onboardingRepository),
       ],
     );
     addTearDown(container.dispose);
@@ -178,11 +205,18 @@ void main() {
       () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
     final _FakeAiBridge fakeBridge = _FakeAiBridge()..ttsRepeat = 400;
+    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final OnboardingRepository onboardingRepository = OnboardingRepository(
+      store: store,
+      syncQueue: queue,
+    );
 
     final ProviderContainer container = ProviderContainer(
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
         aiBridgeProvider.overrideWithValue(fakeBridge),
+        syncQueueRepositoryProvider.overrideWithValue(queue),
+        onboardingRepositoryProvider.overrideWithValue(onboardingRepository),
       ],
     );
     addTearDown(container.dispose);
@@ -213,6 +247,14 @@ void main() {
       overrides: <Override>[
         settingsStoreProvider.overrideWithValue(store),
         aiBridgeProvider.overrideWithValue(_FakeAiBridge()),
+        syncQueueRepositoryProvider
+            .overrideWithValue(SyncQueueRepository(store: store)),
+        onboardingRepositoryProvider.overrideWithValue(
+          OnboardingRepository(
+            store: store,
+            syncQueue: SyncQueueRepository(store: store),
+          ),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -225,5 +267,55 @@ void main() {
 
     expect(container.read(audioTurnControllerProvider).phase,
         AudioTurnPhase.cancelled);
+  });
+
+  test('tutor telemetry carries taxonomy metadata for selected language',
+      () async {
+    final InMemorySettingsStore store = InMemorySettingsStore();
+    final _FakeAiBridge fakeBridge = _FakeAiBridge();
+    final SyncQueueRepository queue = SyncQueueRepository(store: store);
+    final OnboardingRepository onboardingRepository = OnboardingRepository(
+      store: store,
+      syncQueue: queue,
+    );
+
+    await onboardingRepository.saveProfileLocalFirst(
+      const OnboardingProfile(
+        displayName: 'efaz',
+        languageCode: 'ar',
+        level: 'a2',
+        weeklyGoalMinutes: 90,
+      ),
+    );
+
+    final ProviderContainer container = ProviderContainer(
+      overrides: <Override>[
+        settingsStoreProvider.overrideWithValue(store),
+        aiBridgeProvider.overrideWithValue(fakeBridge),
+        syncQueueRepositoryProvider.overrideWithValue(queue),
+        onboardingRepositoryProvider.overrideWithValue(onboardingRepository),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final AudioTurnController controller =
+        container.read(audioTurnControllerProvider.notifier);
+
+    await controller.startRecording();
+    await controller.stopRecording();
+
+    final PracticeTelemetryRepository telemetry =
+        container.read(practiceTelemetryRepositoryProvider);
+    final List<PracticeTelemetryEvent> events = await telemetry.readAll();
+    final PracticeTelemetryEvent tutorEvent =
+        events.firstWhere((PracticeTelemetryEvent event) {
+      return event.type == 'tutor_result';
+    });
+
+    expect(tutorEvent.metrics['languageCode'], arabicLanguagePack.languageCode);
+    expect(
+      tutorEvent.metrics['taxonomyVersion'],
+      arabicLanguagePack.taxonomyVersion,
+    );
   });
 }

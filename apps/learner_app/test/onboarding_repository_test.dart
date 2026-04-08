@@ -5,7 +5,8 @@ import 'package:learner_app/src/onboarding/sync_queue.dart';
 import 'package:learner_app/src/state/settings_state.dart';
 
 void main() {
-  test('saveProfileLocalFirst stores profile and enqueues sync marker', () async {
+  test('saveProfileLocalFirst stores profile and enqueues sync marker',
+      () async {
     final InMemorySettingsStore store = InMemorySettingsStore();
     final SyncQueueRepository queue = SyncQueueRepository(store: store);
     final OnboardingRepository repository = OnboardingRepository(

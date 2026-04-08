@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
+import 'package:learner_app/l10n/app_localizations.dart';
 import 'package:learner_app/src/app.dart';
 
 void main() {
-  testWidgets('shows bottom navigation on phone width', (WidgetTester tester) async {
-    await tester.binding.setSurfaceSize(const Size(390, 844));
+  testWidgets('shows bottom navigation on phone width',
+      (WidgetTester tester) async {
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.physicalSize = const Size(390, 844);
     addTearDown(() async {
-      await tester.binding.setSurfaceSize(null);
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
     });
 
     await tester.pumpWidget(const _TestApp());
@@ -19,9 +23,11 @@ void main() {
 
   testWidgets('shows navigation rail on tablet width',
       (WidgetTester tester) async {
-    await tester.binding.setSurfaceSize(const Size(800, 1024));
+    tester.view.devicePixelRatio = 1.0;
+    tester.view.physicalSize = const Size(800, 1024);
     addTearDown(() async {
-      await tester.binding.setSurfaceSize(null);
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
     });
 
     await tester.pumpWidget(const _TestApp());
@@ -37,8 +43,12 @@ class _TestApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: appRouter,
+    return ProviderScope(
+      child: MaterialApp.router(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        routerConfig: appRouter,
+      ),
     );
   }
 }

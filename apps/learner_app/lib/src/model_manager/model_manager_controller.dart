@@ -67,7 +67,8 @@ class ModelManagerController extends StateNotifier<ModelManagerState> {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final ModelManifest? cached = await _manifestRepository.readCached();
-      final List<ModelInstallState> installs = await _installRepository.readAll();
+      final List<ModelInstallState> installs =
+          await _installRepository.readAll();
       final ModelHealth health = await _healthRepository.read();
       state = state.copyWith(
         manifest: cached,
@@ -110,7 +111,8 @@ class ModelManagerController extends StateNotifier<ModelManagerState> {
       return;
     }
 
-    final List<int> artifactBytes = await _artifactRepository.readOrDownload(bundleId);
+    final List<int> artifactBytes =
+        await _artifactRepository.readOrDownload(bundleId);
     final String actualHash = await ModelIntegrity.sha256Hex(artifactBytes);
     if (actualHash != bundle.artifactSha256) {
       state = state.copyWith(
@@ -127,8 +129,10 @@ class ModelManagerController extends StateNotifier<ModelManagerState> {
     await _installRepository.upsert(install);
     final List<ModelInstallState> next = await _installRepository.readAll();
 
-    final List<String> installed =
-        next.where((e) => e.status == 'ready').map((e) => e.bundleId).toList(growable: false);
+    final List<String> installed = next
+        .where((e) => e.status == 'ready')
+        .map((e) => e.bundleId)
+        .toList(growable: false);
     final ModelHealth health = ModelHealth(
       ready: installed.isNotEmpty,
       installedBundles: installed,
@@ -139,7 +143,8 @@ class ModelManagerController extends StateNotifier<ModelManagerState> {
   }
 
   ModelBundle? _findBundle(String bundleId) {
-    final List<ModelBundle> bundles = state.manifest?.bundles ?? const <ModelBundle>[];
+    final List<ModelBundle> bundles =
+        state.manifest?.bundles ?? const <ModelBundle>[];
     for (final ModelBundle bundle in bundles) {
       if (bundle.id == bundleId) {
         return bundle;
