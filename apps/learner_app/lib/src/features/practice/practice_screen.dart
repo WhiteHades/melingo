@@ -9,7 +9,8 @@ class PracticeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AudioTurnState state = ref.watch(audioTurnControllerProvider);
-    final AudioTurnController controller = ref.read(audioTurnControllerProvider.notifier);
+    final AudioTurnController controller =
+        ref.read(audioTurnControllerProvider.notifier);
 
     return SafeArea(
       child: ListView(
@@ -25,7 +26,9 @@ class PracticeScreen extends ConsumerWidget {
             runSpacing: 8,
             children: <Widget>[
               FilledButton.icon(
-                onPressed: state.phase == AudioTurnPhase.recording
+                onPressed: state.phase == AudioTurnPhase.recording ||
+                        state.phase == AudioTurnPhase.transcribing ||
+                        state.phase == AudioTurnPhase.tutoring
                     ? null
                     : () {
                         controller.startRecording();
@@ -51,6 +54,25 @@ class PracticeScreen extends ConsumerWidget {
                 icon: const Icon(Icons.close),
                 label: const Text('cancel'),
               ),
+              OutlinedButton.icon(
+                onPressed: state.phase == AudioTurnPhase.speaking
+                    ? () {
+                        controller.stopSpeaking();
+                      }
+                    : null,
+                icon: const Icon(Icons.volume_off),
+                label: const Text('stop speech'),
+              ),
+              OutlinedButton.icon(
+                onPressed: state.tutor != null &&
+                        state.phase != AudioTurnPhase.speaking
+                    ? () {
+                        controller.replayAssistantTurn();
+                      }
+                    : null,
+                icon: const Icon(Icons.replay),
+                label: const Text('replay'),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -60,17 +82,48 @@ class PracticeScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('transcript', style: Theme.of(context).textTheme.titleMedium),
+                  Text('transcript',
+                      style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
-                  Text(state.transcript.isEmpty ? 'no transcript yet' : state.transcript),
+                  Text(state.transcript.isEmpty
+                      ? 'no transcript yet'
+                      : state.transcript),
                   const SizedBox(height: 8),
                   Text('confidence: ${state.confidence.toStringAsFixed(2)}'),
                   Text('latency: ${state.latencyMs} ms'),
+                  if (state.tutor != null) ...<Widget>[
+                    const SizedBox(height: 12),
+                    Text('correction',
+                        style: Theme.of(context).textTheme.titleSmall),
+                    const SizedBox(height: 4),
+                    Text(state.tutor!.correctedText),
+                    const SizedBox(height: 8),
+                    Text('explanation',
+                        style: Theme.of(context).textTheme.titleSmall),
+                    const SizedBox(height: 4),
+                    Text(state.tutor!.explanation),
+                    const SizedBox(height: 8),
+                    Text('assistant',
+                        style: Theme.of(context).textTheme.titleSmall),
+                    const SizedBox(height: 4),
+                    Text(state.tutor!.assistantResponseText),
+                    const SizedBox(height: 8),
+                    Text('next prompt',
+                        style: Theme.of(context).textTheme.titleSmall),
+                    const SizedBox(height: 4),
+                    Text(state.tutor!.nextPrompt),
+                    const SizedBox(height: 8),
+                    Text(
+                        'mistake tags: ${state.tutor!.mistakeTags.join(', ')}'),
+                    Text('tutor latency: ${state.tutorLatencyMs} ms'),
+                    Text('tts latency: ${state.ttsLatencyMs} ms'),
+                  ],
                   if (state.error != null) ...<Widget>[
                     const SizedBox(height: 8),
                     Text(
                       state.error!,
-                      style: TextStyle(color: Theme.of(context).colorScheme.error),
+                      style:
+                          TextStyle(color: Theme.of(context).colorScheme.error),
                     ),
                   ],
                 ],

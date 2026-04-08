@@ -11,6 +11,7 @@ class _FakeAiBridge implements AiBridgePlatform {
   bool started = false;
   bool ttsStopped = false;
   int ttsCalls = 0;
+  int ttsRepeat = 1;
 
   @override
   Future<void> initialize() async {}
@@ -50,7 +51,13 @@ class _FakeAiBridge implements AiBridgePlatform {
   @override
   Future<List<int>> runTts({required String responseText}) async {
     ttsCalls += 1;
-    return responseText.codeUnits;
+    if (ttsRepeat <= 1) {
+      return responseText.codeUnits;
+    }
+    final List<int> base = responseText.codeUnits;
+    return List<int>.generate(base.length * ttsRepeat, (int i) {
+      return base[i % base.length];
+    });
   }
 
   @override
@@ -165,6 +172,38 @@ void main() {
       events.any((PracticeTelemetryEvent e) => e.type == 'tts_interrupted'),
       isTrue,
     );
+  });
+
+  test('startRecording while speaking interrupts and starts new turn',
+      () async {
+    final InMemorySettingsStore store = InMemorySettingsStore();
+    final _FakeAiBridge fakeBridge = _FakeAiBridge()..ttsRepeat = 400;
+
+    final ProviderContainer container = ProviderContainer(
+      overrides: <Override>[
+        settingsStoreProvider.overrideWithValue(store),
+        aiBridgeProvider.overrideWithValue(fakeBridge),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final AudioTurnController controller =
+        container.read(audioTurnControllerProvider.notifier);
+
+    await controller.startRecording();
+    final Future<void> firstTurn = controller.stopRecording();
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+
+    await controller.startRecording();
+
+    expect(
+      container.read(audioTurnControllerProvider).phase,
+      AudioTurnPhase.recording,
+    );
+    expect(fakeBridge.ttsStopped, isTrue);
+
+    await controller.cancelRecording();
+    await firstTurn;
   });
 
   test('cancelRecording transitions to cancelled', () async {
