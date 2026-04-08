@@ -58,7 +58,7 @@ jobs:
         run: |
           flutter analyze
           flutter test
-          flutter build web
+          flutter build web --no-wasm-dry-run
 
   firebase-config:
     runs-on: ubuntu-latest

@@ -81,5 +81,6 @@ Expected service name:
 ## Release Notes
 
 - CI validates backend checks, Flutter checks, Firebase JSON syntax, and model-manifest shape.
-- Android release builds can use secret-based signing through `.github/workflows/android-release.yml`.
-- If Android signing secrets are absent, the workflow still falls back to a reproducible unsigned-style debug-key release bundle path for smoke builds.
+- Android release builds require secret-based signing through `.github/workflows/android-release.yml`.
+- The release workflow now fails fast with a clear message if signing secrets are missing.
+- Web CI uses `flutter build web --no-wasm-dry-run` until the secure storage dependency becomes wasm-ready.

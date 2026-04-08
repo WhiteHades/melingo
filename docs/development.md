@@ -18,6 +18,7 @@ From `apps/learner_app`:
 flutter pub get
 flutter analyze
 flutter test
+flutter build web --no-wasm-dry-run
 ```
 
 ## Firebase Project
@@ -42,6 +43,14 @@ From the repo root:
 - `ENABLE_FIREBASE_APP_CHECK=true` enables App Check bootstrap.
 - `ENABLE_FIREBASE_ANON_AUTH=true` signs in anonymously during startup.
 - `FIREBASE_APP_CHECK_WEB_KEY=<site-key>` supplies the reCAPTCHA v3 site key for web App Check.
+
+## Web Build Note
+
+The current web target is treated as a JavaScript web build, not a wasm target. `flutter_secure_storage_web` is still not wasm-ready upstream, so local and CI web builds use:
+
+```bash
+flutter build web --no-wasm-dry-run
+```
 
 ## Firebase Files In Repo
 

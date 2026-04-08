@@ -34,6 +34,12 @@ class FirebaseBootstrap {
     }
 
     if (enableFirebaseAppCheck) {
+      if (kIsWeb && firebaseAppCheckWebKey.isEmpty) {
+        throw StateError(
+          'FIREBASE_APP_CHECK_WEB_KEY is required when App Check is enabled on web.',
+        );
+      }
+
       await FirebaseAppCheck.instance.activate(
         providerAndroid: kDebugMode
             ? const AndroidDebugProvider()
