@@ -74,10 +74,23 @@ Most language apps are comfortable as long as you stay inside their happy path. 
 
 Melangua is being built as a multi-platform Flutter app with Firebase-backed cloud services and a thin custom backend where it still earns its keep.
 
+## Fast Start
+
+From the repo root:
+
+```bash
+/home/efaz/.volta/bin/npm run melangua:backend
+/home/efaz/.volta/bin/npm run melangua:run:linux
+/home/efaz/.volta/bin/npm run melangua:run:web
+/home/efaz/.volta/bin/npm run melangua:run:android
+/home/efaz/.volta/bin/npm run melangua:verify
+```
+
 ## More Docs
 
 - Product architecture: `docs/architecture.md`
 - Product requirements: `docs/prd-melangua-offline-flutter-language-tutor.md`
 - Delivery plan: `plans/melangua-offline-flutter-language-tutor.md`
+- Production runtime plan: `plans/melangua-v1-production-plan.md`
 - Development and setup: `docs/development.md`
 - Manual verification guide: `docs/manual-testing.md`

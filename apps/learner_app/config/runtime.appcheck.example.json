@@ -1,0 +1,6 @@
+{
+  "USE_FIREBASE_EMULATORS": "false",
+  "ENABLE_FIREBASE_APP_CHECK": "true",
+  "ENABLE_FIREBASE_ANON_AUTH": "true",
+  "FIREBASE_APP_CHECK_WEB_KEY": "replace-with-real-recaptcha-v3-site-key"
+}

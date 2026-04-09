@@ -26,12 +26,54 @@ Verified outputs:
 - Linux desktop bundle builds at `apps/learner_app/build/linux/x64/release/bundle/melangua`
 - Android debug APK builds at `apps/learner_app/build/app/outputs/flutter-apk/app-debug.apk`
 
+## Fastest Commands
+
+From the repo root:
+
+```bash
+/home/efaz/.volta/bin/npm run melangua:backend
+/home/efaz/.volta/bin/npm run melangua:health
+/home/efaz/.volta/bin/npm run melangua:verify
+/home/efaz/.volta/bin/npm run melangua:run:web
+/home/efaz/.volta/bin/npm run melangua:run:web:chrome
+/home/efaz/.volta/bin/npm run melangua:run:android
+/home/efaz/.volta/bin/npm run melangua:run:ios
+/home/efaz/.volta/bin/npm run melangua:run:linux
+/home/efaz/.volta/bin/npm run melangua:run:macos
+/home/efaz/.volta/bin/npm run melangua:run:windows
+/home/efaz/.volta/bin/npm run melangua:build:web
+/home/efaz/.volta/bin/npm run melangua:build:android:debug
+/home/efaz/.volta/bin/npm run melangua:build:android:release
+/home/efaz/.volta/bin/npm run melangua:build:ios
+/home/efaz/.volta/bin/npm run melangua:build:linux
+/home/efaz/.volta/bin/npm run melangua:build:macos
+/home/efaz/.volta/bin/npm run melangua:build:windows
+```
+
+Direct helper equivalents:
+
+```bash
+dart tool/melangua.dart backend
+dart tool/melangua.dart health
+dart tool/melangua.dart verify
+dart tool/melangua.dart run linux
+dart tool/melangua.dart run web --config emulators
+dart tool/melangua.dart build android-debug
+```
+
+Committed runtime config profiles:
+
+- `apps/learner_app/config/runtime.local.json`
+- `apps/learner_app/config/runtime.emulators.json`
+- `apps/learner_app/config/runtime.appcheck.example.json`
+
 ## Important Truths Before You Test
 
 - The current app shell, onboarding flow, review flow, stats flow, sync queue, Firebase bootstrap, and model-manager UI are real.
 - The current ASR, tutor, and TTS path is simulated through `UnimplementedAiBridgePlatform` in `apps/learner_app/lib/src/native/ai_bridge_platform.dart`.
 - That means the speaking loop is testable as product flow, but it is not yet exercising real local voice models.
 - The model manifest and bundle install flow are also scaffolded. The app validates bundle metadata and integrity hashes, but it is not yet downloading and running real inference models.
+- FlutterFire did not generate Linux Firebase options in this environment, so Linux desktop currently runs without active Firebase bootstrap.
 
 ## Linux Prerequisites
 
@@ -82,6 +124,12 @@ Expected response:
 
 ### Linux Desktop
 
+Fast path:
+
+```bash
+/home/efaz/.volta/bin/npm run melangua:run:linux
+```
+
 From `apps/learner_app`:
 
 ```bash
@@ -97,10 +145,16 @@ If you only want to launch the previously built release bundle:
 
 ### Web
 
+Fast path:
+
+```bash
+/home/efaz/.volta/bin/npm run melangua:run:web
+```
+
 If Chrome is available:
 
 ```bash
-flutter run -d chrome --web-renderer canvaskit
+/home/efaz/.volta/bin/npm run melangua:run:web:chrome
 ```
 
 If Chrome is not available, use the Flutter web server device:
@@ -129,6 +183,12 @@ flutter run -d web-server \
 ```
 
 ### Android
+
+Fast path:
+
+```bash
+/home/efaz/.volta/bin/npm run melangua:run:android
+```
 
 Start an emulator from Android Studio or connect a device, then from `apps/learner_app`:
 
@@ -162,8 +222,11 @@ From the repo root:
 Then run the Flutter app with:
 
 ```bash
---dart-define=USE_FIREBASE_EMULATORS=true
---dart-define=ENABLE_FIREBASE_ANON_AUTH=true
+/home/efaz/.volta/bin/npm run melangua:run:web:emulators
+
+# or
+
+/home/efaz/.volta/bin/npm run melangua:run:android:emulators
 ```
 
 Only enable App Check locally if you are explicitly testing it and you have a valid web key where needed.
@@ -257,6 +320,7 @@ Not verified here:
 - real ASR inference
 - real tutor model inference
 - real TTS playback backed by shipped models
+- Linux Firebase platform registration via FlutterFire
 - release-signed Android bundle generation
 - live Firebase production rules and App Check behavior in console
 - Play Console rollout
@@ -268,6 +332,15 @@ Not verified here:
 - Firebase App Check production setup
 - real on-device AI runtime implementation behind `AiBridgePlatform`
 - real-device smoke testing on Android hardware
+
+## Concrete Blockers For The Remaining Runtime Work
+
+- Real ASR is not a missing flag. The repo has no shipped speech-recognition runtime or model binding yet.
+- Real tutor inference is not a missing flag. The repo has no shipped text-model runtime or prompt execution layer yet.
+- Real TTS is not a missing flag. The repo has no shipped speech-synthesis runtime or voice model binding yet.
+- Real microphone-to-model capture is not wired because the app currently has no recording plugin or native PCM bridge implementation.
+- Production App Check still requires Firebase console setup and a real web site key.
+- Real-device Android testing still requires either attached hardware or a configured emulator image.
 
 ## Recommended Next Order
 
